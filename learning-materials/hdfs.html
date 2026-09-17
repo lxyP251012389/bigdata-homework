@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>概念学习资料：HDFS（分布式文件系统）</title>
+<meta name="description" content="本文件含 Mermaid 可视化图表（CDN 引入），需联网渲染；离线时显示源代码而非空白">
+<style>
+  :root{
+    --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb; --bg:#f8fafc; --card:#ffffff;
+    --brand:#2563eb; --brand-bg:#eff6ff; --brand-ink:#1e40af;
+    --warn:#b45309; --warn-bg:#fffbeb; --warn-ink:#92400e;
+    --neutral:#475569; --neutral-bg:#f1f5f9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    line-height:1.75;font-size:16px}
+  .wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px}
+  .backlink{display:inline-block;margin-bottom:12px;color:var(--neutral);font-size:14px;text-decoration:none}
+  .backlink:hover{color:var(--brand)}
+  header{background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-radius:16px;
+    padding:36px 32px;margin-bottom:28px}
+  header .badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+    border-radius:999px;padding:2px 14px;font-size:13px;letter-spacing:2px;margin-bottom:14px}
+  header h1{margin:0 0 10px;font-size:34px;letter-spacing:1px}
+  header p{margin:0;opacity:.92;font-size:15px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:26px 28px;margin-bottom:20px}
+  h2{margin:0 0 16px;font-size:21px;display:flex;align-items:center;gap:10px}
+  h2 .no{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;
+    border-radius:8px;background:var(--brand-bg);color:var(--brand);font-size:15px;flex:none}
+  h3{font-size:17px;margin:20px 0 8px}
+  ul,ol{padding-left:1.4em;margin:8px 0}
+  li{margin:6px 0}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px}
+  th{background:var(--neutral-bg);text-align:left;padding:10px 12px;border:1px solid var(--line);font-weight:600}
+  td{padding:10px 12px;border:1px solid var(--line);vertical-align:top}
+  .note{background:var(--brand-bg);border-left:4px solid var(--brand);border-radius:8px;
+    padding:12px 16px;margin:14px 0;font-size:15px}
+  .warnbox{background:var(--warn-bg);border-left:4px solid var(--warn);border-radius:8px;
+    padding:12px 16px;margin:14px 0;font-size:15px}
+  .metabox{background:var(--neutral-bg);border-left:4px solid var(--neutral);border-radius:8px;
+    padding:12px 16px;margin:14px 0;font-size:15px;color:var(--ink)}
+  details{background:#f8fafc;border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--brand)}
+  details[open]{background:#fff}
+  details .ans-block{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  details .ans-block .lbl{display:inline-block;font-size:12px;color:var(--muted);margin-right:6px}
+  details .ans-block .lbl.feedback{color:var(--warn)}
+  details .ans-block .lbl.ref{color:var(--neutral)}
+  .src{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    margin:10px 0;background:#fafafa;font-size:14.5px}
+  .src b{display:block;margin-bottom:2px}
+  .src .meta{color:var(--muted);font-size:13px}
+  .src a{color:var(--brand);word-break:break-all}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:28px}
+  .tag{display:inline-block;background:var(--brand-bg);color:var(--brand);border-radius:6px;
+    padding:1px 8px;font-size:13px;margin:0 4px 4px 0}
+  .mermaid{background:#fff;border:1px dashed #cbd5e1;border-radius:8px;padding:16px 18px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;color:#1e293b;overflow-x:auto;white-space:pre;margin:0}
+  .figure{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin:18px 0}
+  .figure .cap{color:var(--muted);font-size:13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+  .figure .cap .tag{background:var(--brand-bg);color:var(--brand);border-radius:6px;padding:1px 8px;font-size:12px}
+  .mermaid-legend{background:var(--neutral-bg);border-left:3px solid var(--brand);padding:10px 14px;border-radius:0 8px 8px 0;margin:6px 0 18px;font-size:14.5px;line-height:1.7}
+  code{background:var(--brand-bg);color:var(--brand-ink);border-radius:4px;padding:1px 6px;font-size:14px;
+    font-family:Consolas,"Courier New",monospace}
+  a{color:var(--brand)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="backlink" href="index.html">← 返回概念目录</a>
+
+<header>
+  <span class="badge">概念学习资料 · 01</span>
+  <h1>HDFS（分布式文件系统）</h1>
+  <p>由 concept-learner Skill 生成 · 2026-09-17 · 学习深度：入门 · 系列关联：MapReduce / Spark / NoSQL</p>
+</header>
+
+<section>
+  <h2><span class="no">1</span>学习目标</h2>
+  <ul>
+    <li><b>能说出</b>HDFS 的定义，以及它专为哪两类目标设计（超大文件、廉价机器集群）</li>
+    <li><b>能解释</b>NameNode 与 DataNode 的分工，说明"元数据与数据分离"的好处</li>
+    <li><b>能描述</b>一个文件从写入到读取的完整流程，并指出副本机制在哪一步起作用</li>
+    <li><b>能举出</b>HDFS 的一个典型应用场景，以及一个明确<b>不该</b>用 HDFS 的场景并说明理由</li>
+    <li><b>能判断</b>下列说法是否正确："NameNode 存储了文件本身"、"副本越多越安全所以该设成 10"、"海量小文件很适合 HDFS"</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">2</span>核心问题</h2>
+  <ol>
+    <li><b>定义性</b>：一台机器的硬盘根本放不下的文件，怎么用一堆随时可能坏掉的廉价机器存下来，而且还要不出错？</li>
+    <li><b>机制性</b>：文件被切块后散落在不同机器上，使用它的人为什么完全感觉不到"分布式"的存在？某台机器坏了，系统如何自愈？</li>
+    <li><b>边界性</b>：什么样的数据该放进 HDFS，什么样的数据放进去反而是自找麻烦？</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">3</span>通俗解释</h2>
+  <p><b>一句话定义</b>：HDFS 是一个把大文件切块、复制多份、分散存储到成百上千台廉价服务器上，再对外提供统一读写服务的分布式文件系统。</p>
+
+  <p><b>类比</b>：HDFS 像一座"总馆 + 分馆"的图书馆体系——NameNode 是总馆里那张记录"哪本书在哪个分馆哪个书架"的总目录卡，DataNode 是各分馆真正放书的书架。读者（客户端）借书从不去翻每一个书架，而是先查总目录拿到位置，再直奔对应分馆。</p>
+
+  <p><b>类比的局限</b>：有三点不像——其一，图书馆的书只有一本，HDFS 的每个块默认复制 3 份放在不同机器上；其二，图书馆总目录烧了还能靠人力慢慢清点，NameNode 一旦停止工作，整个集群短期内无人能找到任何文件（因此生产环境必须配高可用 HA 备份节点）；其三，图书馆往书架上插书随时可以，HDFS 的文件写完后以"读"为主，不擅长在文件中间随机修改。</p>
+
+  <p><b>关键特征</b>（每条 ≤ 20 字）：</p>
+  <ul>
+    <li><b>分块存储</b>：大文件切成 128MB 的块</li>
+    <li><b>多副本容错</b>：默认 3 副本跨机器存放</li>
+    <li><b>一次写入多次读</b>：追加可以，随机改写不擅长</li>
+    <li><b>移动计算而非数据</b>：计算被送到数据所在机器</li>
+  </ul>
+
+  <div class="note">与系列其他概念的关系：HDFS 解决的是"<b>存</b>"的问题。存在 HDFS 里的数据由 <a href="mapreduce.html">MapReduce</a> 和 <a href="spark.html">Spark</a> 负责"<b>算</b>"；算完需要在线快速查询的结果，常落到 <a href="nosql.html">NoSQL</a> 数据库里。存—算—用，三者构成大数据处理的一条主线。</div>
+</section>
+
+<section>
+  <h2><span class="no">4</span>核心机制 / 组成</h2>
+  <table>
+    <tr><th>组成部分</th><th>角色（类比）</th><th>作用</th></tr>
+    <tr><td><b>NameNode</b></td><td>总目录卡</td><td>管理元数据：文件名 → 切成哪些块 → 每个块在哪几台 DataNode 上；不存数据本身</td></tr>
+    <tr><td><b>DataNode</b></td><td>分馆书架</td><td>真正存数据块；定期向 NameNode 发心跳和块报告，证明自己活着、块还在</td></tr>
+    <tr><td><b>Block（块）</b></td><td>书的基本单位</td><td>默认 128MB；每个块默认 3 个副本，分散在不同机器甚至不同机架上</td></tr>
+    <tr><td><b>客户端</b></td><td>读者</td><td>读写前先问 NameNode 拿位置，然后<b>直连</b> DataNode 传输数据，数据流不过 NameNode</td></tr>
+  </table>
+
+  <div class="figure">
+    <div class="cap"><span>HDFS 读写机制：先查目录，再直连书架</span><span class="tag">机制图</span></div>
+<pre class="mermaid">
+flowchart LR
+    C[客户端] -->|1 查元数据| N[NameNode]
+    N -->|2 返回块位置| C
+    C -->|3 直连读写| D1[DataNode 1]
+    D1 -.->|流水线复制| D2[DataNode 2]
+    D2 -.->|流水线复制| D3[DataNode 3]
+    D1 -->|心跳汇报| N
+    D3 -->|心跳汇报| N
+    classDef main fill:#eff6ff,stroke:#2563eb,stroke-width:2px;
+    classDef aux fill:#f1f5f9,stroke:#475569;
+    class C,N main;
+    class D1,D2,D3 aux;
+</pre>
+  </div>
+
+  <p><b>图后解读</b>：读图顺序是"先上后下"——客户端任何读写操作第一步永远是问 NameNode（实线 1、2），拿到块的位置清单后，直接与 DataNode 传输数据（实线 3），<b>数据流不经过 NameNode</b>，这保证了 NameNode 不会成为数据传输的瓶颈。数据写入时沿 DataNode 组成的流水线依次复制（虚线），最终形成 3 副本。DataNode 持续向 NameNode 心跳汇报（下方实线），NameNode 一旦发现某台机器失联，就把丢失的块调度到其他机器重新补齐副本——这就是"机器坏了数据还在"的自愈机制。</p>
+</section>
+
+<section>
+  <h2><span class="no">5</span>应用场景</h2>
+  <p><b>场景描述</b>：某电商平台的日志团队每天要处理约 500GB 的用户访问日志。日志采集程序把当天日志流式写入 HDFS；第二天，数据团队用 Spark 作业（在 <a href="mapreduce.html">MapReduce</a> 之后的主流计算引擎）在集群上统计各页面的访问量、转化漏斗；统计结果写入 NoSQL 库供运营页实时查询。</p>
+
+  <div class="figure">
+    <div class="cap"><span>一天 500GB 日志的写入与分析全流程</span><span class="tag">时序图</span></div>
+<pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant L as 日志采集
+    participant C as HDFS客户端
+    participant N as NameNode
+    participant D as DataNode集群
+    L->>C: 写入今日日志文件
+    C->>N: 请求创建文件
+    N-->>C: 返回块清单与机器位置
+    C->>D: 沿流水线写入块(3副本)
+    D-->>C: 副本确认
+    C-->>N: 提交,登记元数据
+    Note over N: 文件→块→机器的映射表
+    C->>N: 次日,分析作业查询块位置
+    N-->>C: 返回位置清单
+    C->>D: 就近读取,无需搬运数据
+</pre>
+  </div>
+
+  <p><b>图后解读</b>：第 1–5 步是写入——采集程序只管把数据交给客户端，切块、选机器、流水线复制全部由 HDFS 自动完成，采集程序感知不到背后有几百台机器。第 6 步登记的元数据就是 NameNode 那张"目录卡"。第 7–9 步是次日分析作业的读取：分析引擎先问 NameNode 拿到块的位置，然后<b>把计算任务直接调度到数据所在的机器上执行</b>（数据本地性），避免了几百 GB 数据在网络上搬来搬去。这个"存与算配合"的场景，正是 HDFS 与 <a href="spark.html">Spark</a> 概念的交汇点。</p>
+</section>
+
+<section>
+  <h2><span class="no">6</span>概念辨析</h2>
+
+  <h3>易混淆对比</h3>
+  <table>
+    <tr><th>维度</th><th>HDFS</th><th>单机文件系统（NTFS/ext4）</th><th>对象存储（S3/OSS）</th></tr>
+    <tr><td><b>设计目标</b></td><td>廉价机器集群上存超大文件</td><td>单机磁盘的高效通用管理</td><td>云端海量对象的简单存取</td></tr>
+    <tr><td><b>规模上限</b></td><td>PB 级、数千台节点</td><td>单盘 TB 级</td><td>几乎无限（服务方托管）</td></tr>
+    <tr><td><b>可靠性来源</b></td><td>多副本 / 纠删码</td><td>依赖单块硬盘</td><td>服务方负责，用户无感</td></tr>
+    <tr><td><b>典型访问模式</b></td><td>流式批处理（一次写多次读）</td><td>随机读写均可</td><td>HTTP 接口整对象读写</td></tr>
+    <tr><td><b>常见误用</b></td><td>拿来存海量小文件、要求毫秒级响应</td><td>拿单机盘硬扛集群级数据量</td><td>混淆"对象"与"文件树目录"语义</td></tr>
+  </table>
+
+  <h3>常见误解清单</h3>
+  <ul>
+    <li><b>误解</b>"NameNode 是主节点，所以数据存在它里面" → <b>正确认识</b>：NameNode 只存"文件 → 块 → 机器"的元数据，数据本身全在 DataNode 上</li>
+    <li><b>误解</b>"3 副本所以绝对不丢数据" → <b>正确认识</b>：副本降低了单点故障概率，但机房级灾难、误删除仍会丢数据，重要数据需跨集群备份或用纠删码策略</li>
+    <li><b>误解</b>"块设得越大越好" → <b>正确认识</b>：块过大时小文件浪费空间更严重、任务并行度下降；128MB 是大文件场景下的平衡值</li>
+    <li><b>误解</b>"HDFS 和普通硬盘一样，随时改文件中间的内容" → <b>正确认识</b>：HDFS 面向一次写入多次读取，支持追加，不擅长随机改写</li>
+    <li><b>误解</b>"小文件多存一点没关系" → <b>正确认识</b>：每个文件/块都占用 NameNode 内存中的元数据，上亿个小文件会直接压垮 NameNode</li>
+  </ul>
+
+  <h3>使用边界</h3>
+  <div class="metabox">
+    <b>该用 HDFS</b>：单文件 GB～TB 级的大数据集；批量流式读写；配合 MapReduce/Spark 做离线分析；机器数量多且允许机器随时故障。<br>
+    <b>不该用 HDFS</b>：要求毫秒级低延迟的在线查询；海量小文件（图片、短消息）；需要频繁随机修改的数据；数据总量单机就能放下的场景（直接用本地盘 + 普通文件更简单）。
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">7</span>自测问题</h2>
+
+  <p><b>单选 1</b>：HDFS 中真正存储文件数据内容的是？</p>
+  <ol type="A">
+    <li>NameNode</li>
+    <li>DataNode</li>
+    <li>Secondary NameNode</li>
+    <li>ZooKeeper</li>
+  </ol>
+  <details>
+    <summary>查看答案与反馈</summary>
+    <div class="ans-block">
+      <span class="lbl">正确答案</span>B。文件内容被切块后存放在 DataNode 上。<br>
+      <span class="lbl feedback">答错反馈</span>若选 A：NameNode 是"总目录卡"，只登记"文件 → 块 → 机器位置"这类元数据，数据一个字节都不在它那里；若选 C：Secondary NameNode 只是定期合并元数据镜像的辅助角色，既不是备份也不存数据。<br>
+      <span class="lbl ref">回到正文</span>板块 4 的组成部分表与机制图解读。
+    </div>
+  </details>
+
+  <p><b>单选 2</b>：某公司打算把 100 亿张每张 50KB 的小图片直接存入 HDFS，最可能先遇到的问题是？</p>
+  <ol type="A">
+    <li>磁盘空间放不下</li>
+    <li>NameNode 被海量元数据压垮</li>
+    <li>网络带宽不够</li>
+    <li>副本数无法设置</li>
+  </ol>
+  <details>
+    <summary>查看答案与反馈</summary>
+    <div class="ans-block">
+      <span class="lbl">正确答案</span>B。每个文件无论多小都要在 NameNode 内存里占一条元数据，100 亿条元数据足以把它压垮。<br>
+      <span class="lbl feedback">答错反馈</span>若选 A：总数据量约 500TB，磁盘反而不是瓶颈——这正是"小文件问题"隐蔽的地方：空间算得下，元数据撑不住。正确做法是先把小文件合并成大文件（如 Hadoop Archive 或序列文件）再入 HDFS。<br>
+      <span class="lbl ref">回到正文</span>板块 6 常见误解清单第 5 条、使用边界。
+    </div>
+  </details>
+
+  <p><b>单选 3</b>：对 HDFS"一次写入、多次读取"的准确理解是？</p>
+  <ol type="A">
+    <li>文件写完后总共只能读取一次</li>
+    <li>文件写完后以读为主，不擅长随机修改，但支持追加</li>
+    <li>文件一旦写入就不能删除</li>
+    <li>每个文件只能保存一个副本</li>
+    <br>
+    </ol>
+  <details>
+    <summary>查看答案与反馈</summary>
+    <div class="ans-block">
+      <span class="lbl">正确答案</span>B。"一次写入多次读取"约束的是<b>写模式</b>：适合流式追加与反复读取，不适合在文件中间随机改写。<br>
+      <span class="lbl feedback">答错反馈</span>若选 A：把"多次读取"读反了——限制在"写"不在"读"，读多少次都行。<br>
+      <span class="lbl ref">回到正文</span>板块 3 关键特征、板块 6 使用边界。
+    </div>
+  </details>
+
+  <p><b>简答 1</b>：为什么 HDFS 要把元数据（NameNode）与实际数据（DataNode）分开存放，而不是让每台机器各自记录自己的文件？</p>
+  <details>
+    <summary>查看答案与反馈</summary>
+    <div class="ans-block">
+      <span class="lbl">得分点</span>① 统一目录视图：客户端只需问一处就能定位任何文件，不必挨个询问全部机器；② 两类负载规模不同：元数据小而访问频繁、数据大而传输量大，分离后可以各自按需扩展；③ 代价是 NameNode 成为关键单点，所以生产环境必须部署高可用（HA）备份节点。<br>
+      <span class="lbl feedback">常见漏答</span>只答"方便管理"而没有指出"元数据小、数据大"的规模差异，或漏掉"NameNode 因此成为单点、需要 HA"的代价面。<br>
+      <span class="lbl ref">回到正文</span>板块 3 类比的局限、板块 4 组成表。
+    </div>
+  </details>
+
+  <p><b>简答 2</b>：HDFS 集群上跑分析作业时，通常"把计算任务送到数据所在的机器执行，而不是把数据搬到计算处"。这条设计哲学叫什么？为什么这样设计？</p>
+  <details>
+    <summary>查看答案与反馈</summary>
+    <div class="ans-block">
+      <span class="lbl">得分点</span>① 这叫"数据本地性"（data locality），即"移动计算优于移动数据"；② 网络带宽是集群里最稀缺的资源，几百 GB 数据跨网络搬运远比送一段计算代码昂贵；③ HDFS 元数据里记录了每个块的位置，使计算框架能把任务精确调度到块所在的机器上。<br>
+      <span class="lbl feedback">常见漏答</span>只说"更快"而没点出"网络带宽最稀缺"这个根因；或漏掉"HDFS 记录块位置，才使调度成为可能"——这是它与 <a href="spark.html">Spark</a>、<a href="mapreduce.html">MapReduce</a> 协作的基础。<br>
+      <span class="lbl ref">回到正文</span>板块 3 关键特征、板块 5 图后解读。
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2><span class="no">8</span>参考来源（仅官方）</h2>
+  <span class="src">
+    <b>Apache Hadoop 官方文档 · HDFS Architecture</b>
+    <a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html</a>
+    <span class="meta">访问日期：2026-09-17（HTTP 200 已验证）· 支撑板块 3、4（设计目标、NameNode/DataNode 分工、副本与心跳机制）</span>
+  </span>
+  <span class="src">
+    <b>Apache Hadoop 官方文档 · 集群部署与默认配置</b>
+    <a href="https://hadoop.apache.org/docs/stable/">https://hadoop.apache.org/docs/stable/</a>
+    <span class="meta">访问日期：2026-09-17（HTTP 200 已验证）· 支撑板块 4、5（块大小、副本策略、读写流程）</span>
+  </span>
+  <span class="src">
+    <b>IBM 官方主题页 · What is HDFS</b>
+    <a href="https://www.ibm.com/think/topics/hdfs">https://www.ibm.com/think/topics/hdfs</a>
+    <span class="meta">访问日期：2026-09-17（HTTP 200 已验证）· 支撑板块 3、5、6（通俗定位、应用场景、适用边界）</span>
+  </span>
+</section>
+
+<footer>概念学习资料 · 由 concept-learner Skill 生成 · 请结合人工核查使用</footer>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });</script>
+</body>
+</html>
