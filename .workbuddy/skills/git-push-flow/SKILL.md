@@ -132,3 +132,6 @@ curl -s https://api.github.com/repos/<owner>/<repo>/commits | head -40
   2. **凭据选择器会让 push 静默挂起**：本机 `credential.helper=helper-selector` 在非交互环境会弹 GUI 选择框，git 一直等待 → 超时退出码 124，且远程什么都没收到（此时"超时≠已推"不成立，必须 SHA 判定）。绕过方式：`git -c credential.helper= -c credential.helper=manager credential fill` 直接取令牌（跳过选择器）；必要时临时把令牌写进 remote URL 推送，**推完立刻改回干净 URL**，且不要把带令牌的 URL 打印出来。
   3. **建远程仓库不必装 gh 或登录**：本机 GCM 里已有令牌，取到后 `POST https://api.github.com/user/repos` 即可建空仓；`api.github.com` 比 `github.com` 稳定得多，验证分支优先走它（空仓库返回 "Git Repository is empty." + 409，等价于分支不存在）。
   4. **沙箱内 .git 引用写入可能不持久化**：`git fetch` 明明报 `* [new branch] main -> origin/main`，同一条命令内的 `for-each-ref refs/remotes` 却查不到，`git status` 显示 `main...origin/main [gone]`。这不代表远程有问题，也不影响 push——**判定一律靠 SHA 对比，不要看 status 的 [gone]**。让用户在其自己的终端跑一次 `git fetch origin` 通常可恢复显示。
+  5. **要向用户证明"某文件确实进了仓库"时**：`GET https://api.github.com/repos/<owner>/<repo>/git/trees/<branch>?recursive=1` 直接列远程文件树，比让用户去网页上看更直观（本次用它确认 `.workbuddy/skills/**` 已入库）。
+
+- **2026-09-17 第二轮（仓库级 Skill 入库，一次成功）**：沿用「取令牌 → 临时写入 remote URL → push → 立刻改回干净 URL → api 通道 SHA 验证」这套流程，退出码 0 且 SHA 一致，全程无坑。说明该方法稳定可复用，**以后首次推送之外的常规推送也照此办理**。另注：`.gitignore` 只需排除 `.workbuddy/memory/`，`.workbuddy/skills/` 要保留（项目级 Skill 必须随仓库提交才能"仓库级别"生效）。
