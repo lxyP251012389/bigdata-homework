@@ -1,0 +1,17 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# 环境与密钥
+.env
+*.key
+
+# WorkBuddy 会话数据（不进仓库）
+.workbuddy/memory/
+
+# 系统杂项
+.DS_Store
+Thumbs.db
