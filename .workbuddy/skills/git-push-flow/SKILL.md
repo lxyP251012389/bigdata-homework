@@ -134,4 +134,10 @@ curl -s https://api.github.com/repos/<owner>/<repo>/commits | head -40
   4. **沙箱内 .git 引用写入可能不持久化**：`git fetch` 明明报 `* [new branch] main -> origin/main`，同一条命令内的 `for-each-ref refs/remotes` 却查不到，`git status` 显示 `main...origin/main [gone]`。这不代表远程有问题，也不影响 push——**判定一律靠 SHA 对比，不要看 status 的 [gone]**。让用户在其自己的终端跑一次 `git fetch origin` 通常可恢复显示。
   5. **要向用户证明"某文件确实进了仓库"时**：`GET https://api.github.com/repos/<owner>/<repo>/git/trees/<branch>?recursive=1` 直接列远程文件树，比让用户去网页上看更直观（本次用它确认 `.workbuddy/skills/**` 已入库）。
 
+- **2026-09-29 第三轮（常规推送，两个新坑）**：
+  1. **API 单端点有 CDN 缓存，会伪造"未同步"结论**：push 成功后立刻 `GET /repos/<owner>/<repo>/commits/main` 仍返回旧 SHA（本次显示 541a67e，实际已是 264b251），差点误判为没推上去且触发无谓重试。改用列表端点 `GET /repos/<owner>/<repo>/commits?per_page=3`（无缓存，立即返回新 SHA）+ `git ls-remote origin refs/heads/main` 交叉验证后确认成功。**结论：验证要跑两个独立通道；单通道报"未同步"时先怀疑缓存，别急着重试。**
+  2. **`grep` 抽远程文件树会静默返回空**：GitHub API 的 JSON 带空格（`"path": "x"` 而非 `"path":"x"`），`grep -o '"path":"[^"]*"'` 匹配不到任何东西，看起来像"仓库是空的"。正确做法：把响应存成文件后用 `python -c "import json; ..."` 解析 `tree[].path`，中文路径也不会乱码。
+  3. **非首次的常规推送同样会撞上凭据选择器挂起**：本轮 `git push origin main` 仍是 timeout 124 + 空日志（无任何输出）。「取令牌 → 临时写入 remote URL → `-c credential.helper=` push → 立刻改回干净 URL」这套无脑复用即可，退出码 0 一次成功。
+  4. 沙箱内 `git fetch` 后 `origin/main` 引用依旧不持久化（fetch 报 `[new branch]` 但 `--set-upstream-to` 仍报 does not exist，`git status -sb` 显示 `[gone]`）。**属环境现象，不影响推送**，不要在它上面浪费时间；让用户自己在终端跑 `git fetch origin` 即可恢复显示。
+
 - **2026-09-17 第二轮（仓库级 Skill 入库，一次成功）**：沿用「取令牌 → 临时写入 remote URL → push → 立刻改回干净 URL → api 通道 SHA 验证」这套流程，退出码 0 且 SHA 一致，全程无坑。说明该方法稳定可复用，**以后首次推送之外的常规推送也照此办理**。另注：`.gitignore` 只需排除 `.workbuddy/memory/`，`.workbuddy/skills/` 要保留（项目级 Skill 必须随仓库提交才能"仓库级别"生效）。

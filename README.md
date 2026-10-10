@@ -10,7 +10,9 @@ bigdata-homework/
 │   ├── 01.py              # Python 作业（第一个程序）
 │   └── 01.ipynb           # 同内容的 notebook，含已执行输出
 ├── learning-materials/
-│   └── hdfs.html          # 概念学习资料：HDFS（大数据四件套之一）
+│   ├── hdfs.html             # 概念学习资料：HDFS（大数据四件套之一）
+│   ├── python-运算符.html     # Python 语法地基：七类运算符
+│   └── python-变量类型.html   # Python 语法地基：八种常用类型 + 可变/不可变
 ├── python-4次学习地图.html  # 四次课学完 Python 的路线图
 ├── .workbuddy/skills/     # 【仓库级 Skill】随仓库走，克隆即可用
 │   ├── git-push-flow/
@@ -58,6 +60,8 @@ bigdata-homework/
 | `concept-learner` Skill | 生成流程框架与八板块结构 | 逐条执行过一次（HDFS），结构可用 |
 | `learning-materials/hdfs.html` | 起草正文与可视化图 | **所有参考来源链接逐条 curl 验证返回 200**，访问日期标注在文内 |
 | `python-4次学习地图.html` | 起草编排与练习设计 | 已按四次课的课时约束复核 |
+| `learning-materials/python-运算符.html` | 起草正文、优先级表与易混辨析 | 待本人复核（第 1 次课配套） |
+| `learning-materials/python-变量类型.html` | 起草正文、类型地图与练习 | **所有代码示例在本地 Python 3.13 实跑，输出逐条核对**；**4 条 python.org 来源 curl 验证 200**（访问日期 2026-10-10）；正文待本人复核 |
 | `scripts/01.py` | **本人手写** | 第一行代码，非 AI 代写 |
 
 Skill 的定位是「把可复用的方法固化下来」，不是替人完成作业——概念资料仍需本人在理解后修订。

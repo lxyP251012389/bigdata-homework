@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 变量类型学习资料</title>
+<style>
+  :root{
+    --bg:#F7F7F4;
+    --card:#FFFFFF;
+    --ink:#1F1F1D;
+    --ink2:#4A4A46;
+    --ink3:#7A7A74;
+    --line:#E3E2DC;
+    --blue:#185FA5;
+    --blue-l:#E6F1FB;
+    --blue-d:#0C447C;
+    --teal:#0F6E56;
+    --teal-l:#E1F5EE;
+    --amber:#854F0B;
+    --amber-l:#FAEEDA;
+    --red:#A32D2D;
+    --red-l:#FCEBEB;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:48px 28px 80px;}
+  h1{font-size:28px;font-weight:600;margin:0 0 8px;letter-spacing:-0.3px;}
+  .sub{color:var(--ink3);font-size:14px;margin:0 0 32px;}
+  h2{font-size:19px;font-weight:600;margin:44px 0 14px;}
+  h3{font-size:16px;font-weight:600;margin:0 0 6px;}
+  p{margin:0 0 12px;}
+  ul,ol{margin:0 0 12px;padding-left:22px;}
+  li{margin:2px 0;}
+  code{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    background:#F1EFE8;
+    padding:1px 5px;
+    border-radius:4px;
+  }
+  pre{
+    background:#2C2C2A;
+    color:#F1EFE8;
+    padding:14px 16px;
+    border-radius:10px;
+    overflow-x:auto;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    line-height:1.65;
+    margin:10px 0 14px;
+  }
+  pre code{background:none;color:inherit;padding:0;font-size:13px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 26px 20px;
+    margin:0 0 20px;
+  }
+  .card-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+  .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:14px;font-weight:600;
+    flex:0 0 auto;transform:translateY(3px);
+  }
+  .goal{
+    background:var(--blue-l);border-radius:10px;padding:10px 14px;
+    font-size:14px;color:var(--blue-d);margin:10px 0 16px;
+  }
+  .sec-t{
+    font-size:13px;font-weight:600;color:var(--ink3);
+    letter-spacing:0.4px;margin:18px 0 4px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#F1EFE8;font-weight:600;font-size:13px;}
+  td code{font-size:12.5px;}
+  .pass{
+    background:var(--teal-l);border-left:3px solid var(--teal);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#085041;margin:16px 0 0;
+  }
+  .warn{
+    background:var(--red-l);border-left:3px solid var(--red);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#501313;margin:12px 0;
+  }
+  .tip{
+    background:var(--amber-l);border-left:3px solid var(--amber);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#412402;margin:12px 0;
+  }
+  details{
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;background:#FCFCFA;margin:8px 0 12px;
+  }
+  summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--blue);}
+  details pre{margin:10px 0 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:700px){.grid2{grid-template-columns:1fr;}}
+  .mini{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FCFCFA;}
+  .mini h3{font-size:14px;}
+  .mini p{font-size:13.5px;color:var(--ink2);margin:0;}
+  ol.check{list-style:none;padding-left:0;}
+  ol.check li{padding-left:26px;position:relative;margin:6px 0;font-size:14px;}
+  ol.check li::before{
+    content:"";position:absolute;left:0;top:7px;
+    width:14px;height:14px;border:1.5px solid var(--ink3);border-radius:4px;
+  }
+  a{color:var(--blue);}
+  hr{border:none;border-top:1px solid var(--line);margin:40px 0;}
+  .foot{font-size:13px;color:var(--ink3);margin-top:36px;}
+  .tag{
+    display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;
+    background:var(--blue-l);color:var(--blue-d);margin-left:6px;
+  }
+  .figure{
+    border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px 12px;background:#FCFCFA;margin:16px 0 10px;
+  }
+  .figure figcaption{font-size:13px;color:var(--ink3);margin:0 0 10px;}
+  .legend{font-size:13px;color:var(--ink2);margin:10px 0 0;}
+  .legend span{margin-right:18px;}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px;}
+  @media print{
+    body{background:#fff;}
+    .card{break-inside:avoid;box-shadow:none;}
+    pre{background:#F1EFE8;color:#1F1F1D;}
+    details{border:none;}
+    details pre{display:block !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Python 变量类型</h1>
+  <p class="sub">第 2 次课配套资料 · 属于「语法地基」模块 · 建议 45–60 分钟学完并做完练习</p>
+
+  <div class="tip">
+    <strong>先搞清楚"类型"是什么：</strong>程序里的数据不是一堆乱码，每一种数据都有自己的"物种"——数字能算加减，文字能拼接截取，列表能增删元素。这个物种就是<strong>类型</strong>。它决定了「这个值能做什么操作」。选错类型，程序要么报错，要么悄悄给出错误结果。
+  </div>
+
+  <h2>八种常用类型速览</h2>
+  <table>
+    <thead>
+      <tr><th style="width:16%">类型</th><th style="width:22%">写法示例</th><th style="width:32%">装什么</th><th>能改吗</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>int</code> 整数</td><td><code>18</code> <code>-3</code></td><td>不带小数点的数</td><td>不可改</td></tr>
+      <tr><td><code>float</code> 小数</td><td><code>3.14</code> <code>-0.5</code></td><td>带小数点的数</td><td>不可改</td></tr>
+      <tr><td><code>bool</code> 布尔</td><td><code>True</code> <code>False</code></td><td>真 / 假，判断的结果</td><td>不可改</td></tr>
+      <tr><td><code>str</code> 字符串</td><td><code>"你好"</code> <code>'abc'</code></td><td>一串文字</td><td>不可改</td></tr>
+      <tr><td><code>list</code> 列表</td><td><code>[1, 2, 3]</code></td><td>一组有序数据，可重复</td><td><strong>可改</strong></td></tr>
+      <tr><td><code>tuple</code> 元组</td><td><code>(1, 2)</code></td><td>一组有序数据，锁死不改</td><td>不可改</td></tr>
+      <tr><td><code>dict</code> 字典</td><td><code>{"姓名": "小明"}</code></td><td>一组「键 → 值」对应关系</td><td><strong>可改</strong></td></tr>
+      <tr><td><code>set</code> 集合</td><td><code>{1, 2}</code></td><td>一组无序数据，自动去重</td><td><strong>可改</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    另外还有个特殊的 <code>NoneType</code>，只有一个值 <code>None</code>，表示"什么都没有"。它不算在上面八种里，但几乎每个程序都会用到，后面单独讲。
+  </div>
+
+  <figure class="figure">
+    <figcaption>类型地图：先看"装一个值还是装一组值"，再看"能不能改"</figcaption>
+    <svg viewBox="0 0 860 212" width="100%" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Python 类型地图</title>
+      <desc>上排为存单个值的类型 int、float、bool、str，均不可改；下排为存一组值的类型 list、tuple、dict、set，其中 tuple 不可改，其余可改。</desc>
+      <text x="0" y="16" font-size="13" font-weight="600" fill="#185FA5" font-family="system-ui,sans-serif">存单个值</text>
+      <g>
+        <rect x="0" y="26" width="200" height="62" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="100" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">int 整数</text>
+        <text x="100" y="69" text-anchor="middle" font-size="12.5" fill="#185FA5" font-family="system-ui,sans-serif">18　任意大小</text>
+      </g>
+      <g>
+        <rect x="215" y="26" width="200" height="62" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="315" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">float 小数</text>
+        <text x="315" y="69" text-anchor="middle" font-size="12.5" fill="#185FA5" font-family="system-ui,sans-serif">3.14　有精度误差</text>
+      </g>
+      <g>
+        <rect x="430" y="26" width="200" height="62" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="530" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">bool 布尔</text>
+        <text x="530" y="69" text-anchor="middle" font-size="12.5" fill="#185FA5" font-family="system-ui,sans-serif">True / False</text>
+      </g>
+      <g>
+        <rect x="645" y="26" width="200" height="62" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="745" y="50" text-anchor="middle" font-size="14" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">str 字符串</text>
+        <text x="745" y="69" text-anchor="middle" font-size="12.5" fill="#185FA5" font-family="system-ui,sans-serif">"你好"　不可改</text>
+      </g>
+
+      <text x="0" y="126" font-size="13" font-weight="600" fill="#0F6E56" font-family="system-ui,sans-serif">存一组值</text>
+      <g>
+        <rect x="0" y="136" width="200" height="62" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="100" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="#085041" font-family="system-ui,sans-serif">list 列表</text>
+        <text x="100" y="179" text-anchor="middle" font-size="12.5" fill="#0F6E56" font-family="system-ui,sans-serif">[1, 2]　可增删改</text>
+      </g>
+      <g>
+        <rect x="215" y="136" width="200" height="62" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="315" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">tuple 元组</text>
+        <text x="315" y="179" text-anchor="middle" font-size="12.5" fill="#185FA5" font-family="system-ui,sans-serif">(1, 2)　锁死不改</text>
+      </g>
+      <g>
+        <rect x="430" y="136" width="200" height="62" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="530" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="#085041" font-family="system-ui,sans-serif">dict 字典</text>
+        <text x="530" y="179" text-anchor="middle" font-size="12.5" fill="#0F6E56" font-family="system-ui,sans-serif">{键: 值}　按键查</text>
+      </g>
+      <g>
+        <rect x="645" y="136" width="200" height="62" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="745" y="160" text-anchor="middle" font-size="14" font-weight="600" fill="#085041" font-family="system-ui,sans-serif">set 集合</text>
+        <text x="745" y="179" text-anchor="middle" font-size="12.5" fill="#0F6E56" font-family="system-ui,sans-serif">{1, 2}　自动去重</text>
+      </g>
+    </svg>
+    <p class="legend">
+      <span><i class="sw" style="background:#E6F1FB;border:1px solid #185FA5"></i>不可改（改了会报错，只能生成新值）</span>
+      <span><i class="sw" style="background:#E1F5EE;border:1px solid #0F6E56"></i>可改（能在原地增删）</span>
+    </p>
+  </figure>
+
+  <p><strong>图怎么看：</strong>先横向分两排——上排每个变量只存一个值，下排每个变量存一组值；再看颜色——蓝色系改不动，绿色系能原地改。注意两个"例外"位置：<code>str</code> 虽然是单个值但用法和容器很像（能切片、能遍历），<code>tuple</code> 虽然在容器排却不可改。这两处是最容易记混的地方。</p>
+
+  <h2>逐个认识</h2>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">1</span>
+      <h3>数字：int 与 float</h3>
+    </div>
+    <div class="goal">重点记住两件事：<code>/</code> 永远得到 float；float 有精度误差。</div>
+
+    <table>
+      <thead><tr><th style="width:20%">类型</th><th style="width:26%">例子</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code></td><td><code>18</code> <code>-3</code> <code>0</code></td><td>整数。<strong>Python 的整数没有大小上限</strong>，<code>10**100</code> 照样算得动</td></tr>
+        <tr><td><code>float</code></td><td><code>3.14</code> <code>-0.5</code> <code>2.0</code></td><td>小数。只要有小数点或 <code>/</code> 运算，结果就是 float</td></tr>
+      </tbody>
+    </table>
+
+<pre><code>print(7 / 2)      # 3.5   ← 除法永远得小数
+print(7 // 2)     # 3     ← 整除才得整数
+print(type(7/2))  # &lt;class 'float'&gt;
+print(10 ** 100)  # 1 后面跟 100 个 0，不会溢出</code></pre>
+
+    <div class="warn"><strong>精度坑：</strong><code>0.1 + 0.2</code> 在 Python 里等于 <code>0.30000000000000004</code>，不等于 <code>0.3</code>。因为浮点数用二进制存储，很多十进制小数存不精确。<strong>比较小数不要用 <code>==</code></strong>，改成判断差值小于一个很小的数：<code>abs(0.1+0.2 - 0.3) &lt; 1e-9</code>。涉及金额请改用「分」为单位存整数。</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">2</span>
+      <h3>bool 布尔：只有两个值</h3>
+    </div>
+    <div class="goal">记住首字母必须大写，以及哪些值会被当成「假」。</div>
+
+    <p><code>True</code> 和 <code>False</code>，是判断表达式的结果。比较运算、<code>in</code>、<code>and/or/not</code> 算出来都是它。</p>
+
+<pre><code>print(3 &gt; 5)          # False
+print("a" in "abc")   # True
+print(isinstance(True, int))  # True ← bool 其实是 int 的子类
+print(True == 1)      # True    ← 所以 True 能当 1 用（但别这么写）</code></pre>
+
+    <div class="sec-t">哪些值会被当成「假」</div>
+    <p>除了 <code>False</code> 本身，还有：<code>0</code>、<code>0.0</code>、<code>""</code>（空字符串）、<code>[]</code>（空列表）、<code>{}</code>（空字典）、<code>None</code>。其余都是「真」。<strong>注意 <code>"0"</code> 和 <code>[0]</code> 是真值</strong>——它们非空。</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">3</span>
+      <h3>str 字符串：文字</h3>
+    </div>
+    <div class="goal">牢记<strong>不可改</strong>——所有"改"字符串的操作，其实都是生成一个新的。</div>
+
+<pre><code>s = "hi"
+print(s[0])        # h       按下标取字符，从 0 开始
+print(s.upper())   # HI      生成新字符串
+print(s)           # hi      原字符串没变！
+print(len(s))      # 2
+print("a" + "b")   # ab      拼接
+print("ab" * 3)    # ababab  重复</code></pre>
+
+    <div class="warn"><strong>最常见的误解：</strong><code>s[0] = "z"</code> 会报 <code>TypeError: 'str' object does not support item assignment</code>。字符串和元组一样不可改。要改只能重新赋值：<code>s = "z" + s[1:]</code>。</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">4</span>
+      <h3>list 与 tuple：一组有序数据</h3>
+    </div>
+    <div class="goal">两者都能装一串东西，区别只有一个——<strong>能不能改</strong>。</div>
+
+    <table>
+      <thead><tr><th style="width:16%">对比</th><th style="width:42%">list 列表 <code>[1, 2]</code></th><th>tuple 元组 <code>(1, 2)</code></th></tr></thead>
+      <tbody>
+        <tr><td>写法</td><td>方括号 <code>[]</code></td><td>圆括号 <code>()</code></td></tr>
+        <tr><td>能否修改</td><td><strong>能</strong>，<code>append</code> / <code>pop</code> / 下标赋值都行</td><td><strong>不能</strong>，改就报 TypeError</td></tr>
+        <tr><td>什么时候用</td><td>数据会增删变化（成绩单、待办）</td><td>数据不该变（坐标、配置、函数返回多个值）</td></tr>
+        <tr><td>性能</td><td>稍占内存，改起来快</td><td>更省内存，Python 处理更快</td></tr>
+      </tbody>
+    </table>
+
+<pre><code>a = [1, 2]
+a.append(3)     # 可以，a 变成 [1, 2, 3]
+a[0] = 9        # 可以
+
+b = (1, 2)
+b[0] = 9        # TypeError: 'tuple' object does not support item assignment
+
+x, y = (3, 4)   # 元组解包，一次性接住多个值，很常用</code></pre>
+
+    <div class="tip"><strong>单元素元组要写逗号：</strong><code>(1)</code> 是整数 1，<code>(1,)</code> 才是元组。这是初学者高频错误。</div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">5</span>
+      <h3>dict、set 与 None</h3>
+    </div>
+    <div class="goal">dict 靠「键」查值，set 用来去重和判断存在，None 表示"没有"。</div>
+
+    <div class="grid2">
+      <div class="mini">
+        <h3>dict 字典</h3>
+        <p>存「键 → 值」对，用键取值。<code>d["姓名"]</code> 得到 <code>"小明"</code>。键必须不可变（常用字符串），查起来比列表遍历快得多。</p>
+      </div>
+      <div class="mini">
+        <h3>set 集合</h3>
+        <p>无序、自动去重。<code>set("aab")</code> 得到 <code>{"a", "b"}</code>。最常用法：去重、判断在不在、求交集并集。</p>
+      </div>
+    </div>
+
+<pre><code>d = {"姓名": "小明", "年龄": 18}
+print(d["姓名"])        # 小明
+print(list(d.keys()))   # ['姓名', '年龄']  按插入顺序
+
+nums = [1, 2, 2, 3]
+print(set(nums))        # {1, 2, 3}  去重（打印顺序不固定）
+
+result = None           # 占位：还没有结果
+print(result == 0)      # False ← None 不等于 0
+print(result == "")     # False ← 也不等于空字符串
+print(bool(result))     # False ← 但它被当成「假」</code></pre>
+
+    <div class="sec-t">None 怎么判断</div>
+    <p>永远用 <code>is None</code> / <code>is not None</code>，不要用 <code>== None</code>。因为 <code>None</code> 是全局唯一的一个对象（单例），<code>is</code> 判断的是"是不是同一个对象"，语义更准确。</p>
+  </div>
+
+  <h2>两个必须懂的机制</h2>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="num">A</span>
+      <h3>动态类型：变量没有固定类型</h3>
+    </div>
+    <p>Python 里"变量"本质上是个<strong>名字标签</strong>，贴在某个值上。类型属于<strong>值</strong>，不属于名字。所以同一个名字可以随时贴到不同类型的值上：</p>
+
+<pre><code>x = 18
+print(type(x))   # &lt;class 'int'&gt;
+x = "你好"
+print(type(x))   # &lt;class 'str'&gt;   ← 同一个 x，类型变了
+x = [1, 2]
+print(type(x))   # &lt;class 'list'&gt;  ← 又变了，完全合法</code></pre>
+
+    <p>这和 C / Java 不同——那些语言要先声明 <code>int x;</code>，之后 <code>x</code> 只能是整数。Python 不用声明，代价是<strong>类型错了不会在写代码时报错，要到运行到那一行才炸</strong>。所以不确定类型时随时 <code>print(type(x))</code>。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="num">B</span>
+      <h3>可变 vs 不可变</h3>
+    </div>
+    <p>这是理解 Python 数据行为的分水岭：</p>
+    <ul>
+      <li><strong>不可变</strong>：<code>int</code> <code>float</code> <code>bool</code> <code>str</code> <code>tuple</code> —— 想改只能造一个新值，原值不动</li>
+      <li><strong>可变</strong>：<code>list</code> <code>dict</code> <code>set</code> —— 能在原地增删，对象还是那一个</li>
+    </ul>
+
+<pre><code>a = [1, 2]
+b = a            # b 和 a 指向同一个列表，不是复制！
+b.append(3)
+print(a)         # [1, 2, 3]  ← a 也被改了
+
+c = [1, 2]
+d = c.copy()     # 真复制
+d.append(3)
+print(c)         # [1, 2]     ← c 不受影响</code></pre>
+
+    <div class="warn"><strong>为什么重要：</strong>把列表传给函数时，函数里对它的修改会<strong>影响外面的原列表</strong>。这是最常见的隐蔽 bug 来源。不想被改就传 <code>lst.copy()</code> 或 <code>list(lst)</code>。</div>
+  </div>
+
+  <h2>类型转换</h2>
+  <p>不同类型之间可以互相转，用"类型名当函数用"：</p>
+
+  <table>
+    <thead><tr><th style="width:24%">写法</th><th style="width:30%">例子</th><th>结果</th></tr></thead>
+    <tbody>
+      <tr><td><code>int(x)</code></td><td><code>int("18")</code> <code>int(3.9)</code></td><td><code>18</code> <code>3</code>（小数直接截断，不四舍五入）</td></tr>
+      <tr><td><code>float(x)</code></td><td><code>float("3.5")</code> <code>float(7)</code></td><td><code>3.5</code> <code>7.0</code></td></tr>
+      <tr><td><code>str(x)</code></td><td><code>str(18)</code> <code>str([1,2])</code></td><td><code>"18"</code> <code>"[1, 2]"</code></td></tr>
+      <tr><td><code>bool(x)</code></td><td><code>bool(0)</code> <code>bool("")</code> <code>bool([])</code></td><td>全是 <code>False</code></td></tr>
+      <tr><td><code>list(x)</code></td><td><code>list("ab")</code></td><td><code>['a', 'b']</code></td></tr>
+      <tr><td><code>set(x)</code></td><td><code>set("aab")</code></td><td><code>{'a', 'b'}</code>（去重）</td></tr>
+    </tbody>
+  </table>
+
+<pre><code>age = input("请输入年龄：")   # input 得到的永远是字符串！
+print(type(age))              # &lt;class 'str'&gt;
+age = int(age)                # 必须转成整数才能比较
+print(age &gt; 18)</code></pre>
+
+  <div class="tip"><strong>最容易忘的一条：</strong><code>input()</code> 返回的是字符串，直接拿去和数字比大小会报 <code>TypeError</code>。写作业时几乎一定会遇到。</div>
+
+  <h2>五组易混辨析</h2>
+
+  <div class="card">
+    <div class="sec-t">① <code>==</code> 和 <code>is</code> 不是一回事</div>
+    <p><code>==</code> 比的是<strong>值是否相等</strong>，<code>is</code> 比的是<strong>是不是同一个对象</strong>。</p>
+<pre><code>x = [1, 2]
+y = [1, 2]
+print(x == y)   # True   值一样
+print(x is y)   # False  两个不同的列表对象</code></pre>
+    <p class="pass"><strong>规则：</strong>比较值用 <code>==</code>，只在判断 <code>None</code> 时用 <code>is</code>。补充：CPython 会缓存 -5 到 256 的小整数，所以 <code>256 is 256</code> 是 <code>True</code>，但这是实现细节，不要依赖它。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">② "字符串不可改" 和 "变量能重新赋值" 不矛盾</div>
+    <p><code>s = "a"; s = "b"</code> 能跑通，但改的不是字符串本身，而是把名字 <code>s</code> 从旧的 <code>"a"</code> 上撕下来贴到新的 <code>"b"</code> 上。<strong>变的是绑定关系，不是那个字符串对象</strong>。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">③ <code>None</code> 不等于 0，也不等于空字符串</div>
+    <p><code>None == 0</code> 是 <code>False</code>，<code>None == ""</code> 也是 <code>False</code>。但 <code>bool(None)</code> 是 <code>False</code>。语义上 <code>None</code> 是"没有值"，0 是"数值为零"，<code>""</code> 是"空文本"，三件事。判空要分开写。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">④ 什么时候用 list，什么时候用 tuple</div>
+    <p>要增删就用 list；数据定了就不该变，或者要当字典的键、放进集合，就用 tuple。因为<strong>字典的键和集合的元素都必须是不可变类型</strong>，list 放进去会报 <code>TypeError: unhashable type</code>。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">⑤ <code>1</code> 和 <code>"1"</code> 完全不同</div>
+    <p><code>1 + 1</code> 得 <code>2</code>，<code>"1" + "1"</code> 得 <code>"11"</code>，而 <code>1 + "1"</code> 会报 <code>TypeError</code>。类型不同，<code>+</code> 的含义就不同；Python 不会自动帮你把字符串转成数字。</p>
+  </div>
+
+  <h2>动手练习</h2>
+  <p>先自己写，再展开对答案。</p>
+
+  <details>
+    <summary>练习 1：说出 <code>type(7 / 2)</code>、<code>type(7 // 2)</code>、<code>type(True)</code>、<code>type(None)</code> 的结果</summary>
+<pre><code>&lt;class 'float'&gt;     # / 永远得小数
+&lt;class 'int'&gt;       # // 整除得整数
+&lt;class 'bool'&gt;      # True 的类型是 bool
+&lt;class 'NoneType'&gt;  # 注意是 NoneType 不是 None</code></pre>
+    <p>回到正文：见「数字」与「dict、set 与 None」两节。</p>
+  </details>
+
+  <details>
+    <summary>练习 2：下面代码的输出是什么？为什么？</summary>
+<pre><code>a = [1, 2]
+b = a
+b.append(3)
+print(a, b)</code></pre>
+<pre><code>[1, 2, 3] [1, 2, 3]</code></pre>
+    <p><code>b = a</code> 让两个名字指向同一个列表，没有复制。改 <code>b</code> 就是改 <code>a</code>。要独立副本请写 <code>b = a.copy()</code>。回到正文：见「可变 vs 不可变」。</p>
+  </details>
+
+  <details>
+    <summary>练习 3：把 <code>"3.5"</code> 变成可参与数学运算的数字，并判断它是否大于 3</summary>
+<pre><code>s = "3.5"
+n = float(s)
+print(n &gt; 3)   # True</code></pre>
+    <p>字符串不能直接比大小，先 <code>float()</code> 或 <code>int()</code> 转换。回到正文：见「类型转换」。</p>
+  </details>
+
+  <details>
+    <summary>练习 4：写代码去掉列表 <code>[1, 2, 2, 3, 3]</code> 里的重复元素</summary>
+<pre><code>nums = [1, 2, 2, 3, 3]
+print(set(nums))        # {1, 2, 3}  顺序不保证
+print(list(set(nums)))  # 需要列表就再转回来</code></pre>
+    <p>集合自动去重，这是它最常用的场景。回到正文：见「dict、set 与 None」。</p>
+  </details>
+
+  <h2>自检清单</h2>
+  <ol class="check">
+    <li>能说出 int、float、bool、str、list、tuple、dict、set 八种类型的写法和用途</li>
+    <li>能区分哪些类型可变、哪些不可变，并解释为什么 list 传进函数会被改</li>
+    <li>能解释 <code>7 / 2</code> 与 <code>7 // 2</code> 的差异，以及 <code>0.1 + 0.2 != 0.3</code> 的原因</li>
+    <li>能判断 <code>x = [1,2]; y = [1,2]; x is y</code> 的结果，并说明 <code>==</code> 与 <code>is</code> 的分工</li>
+    <li>能举出 None 的一个使用场景，并写出正确的判断写法 <code>if x is None</code></li>
+    <li>能说出 <code>input()</code> 的返回类型，以及为什么必须做类型转换</li>
+    <li>能判断何时用 list、何时用 tuple</li>
+  </ol>
+
+  <hr>
+
+  <h2>可核查来源</h2>
+  <p>以下均为 Python 官方文档（python.org），链接已逐条访问验证，访问日期 2026-10-10。</p>
+  <table>
+    <thead><tr><th style="width:32%">来源</th><th style="width:44%">链接</th><th>支撑内容</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Python 官方文档 · 内置类型</td>
+        <td><a href="https://docs.python.org/3/library/datatypes.html">docs.python.org/3/library/datatypes.html</a></td>
+        <td>类型总览与分类（速览表、逐个认识）</td>
+      </tr>
+      <tr>
+        <td>Python 官方文档 · 数据模型</td>
+        <td><a href="https://docs.python.org/3/reference/datamodel.html">docs.python.org/3/reference/datamodel.html</a></td>
+        <td>对象、值与可变性（可变 vs 不可变、<code>is</code> 与 <code>==</code>）</td>
+      </tr>
+      <tr>
+        <td>Python 官方教程 · 入门</td>
+        <td><a href="https://docs.python.org/3/tutorial/introduction.html">docs.python.org/3/tutorial/introduction.html</a></td>
+        <td>数字、字符串、列表的初步用法（代码示例）</td>
+      </tr>
+      <tr>
+        <td>Python 官方文档 · 常用内置类型</td>
+        <td><a href="https://docs.python.org/3/library/stdtypes.html">docs.python.org/3/library/stdtypes.html</a></td>
+        <td>各类型的操作方法与布尔值规则（bool、None、类型转换）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <strong>本资料中所有代码输出均在本地 Python 3.13 实际运行验证过</strong>（含 <code>0.1+0.2</code>、<code>isinstance(True, int)</code>、元组与字符串赋值报错信息）。
+  </div>
+
+  <p class="foot">
+    第 2 次课配套 · 与 <a href="./python-运算符.html">python-运算符.html</a> 同属「语法地基」模块 ·
+    学习资料由 AI 起草，<strong>请务必人工核查后再作为笔记定稿</strong>（核对事实、改写解释、补充自己的理解），核查记录建议写进 README。
+  </p>
+
+</div>
+</body>
+</html>
