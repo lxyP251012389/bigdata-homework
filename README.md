@@ -12,7 +12,8 @@ bigdata-homework/
 ├── learning-materials/
 │   ├── hdfs.html             # 概念学习资料：HDFS（大数据四件套之一）
 │   ├── python-运算符.html     # Python 语法地基：七类运算符
-│   └── python-变量类型.html   # Python 语法地基：八种常用类型 + 可变/不可变
+│   ├── python-变量类型.html   # Python 语法地基：八种常用类型 + 可变/不可变
+│   └── python-流程控制.html   # Python 语法地基：分支 / 循环 / 跳转
 ├── python-4次学习地图.html  # 四次课学完 Python 的路线图
 ├── .workbuddy/skills/     # 【仓库级 Skill】随仓库走，克隆即可用
 │   ├── git-push-flow/
@@ -62,6 +63,7 @@ bigdata-homework/
 | `python-4次学习地图.html` | 起草编排与练习设计 | 已按四次课的课时约束复核 |
 | `learning-materials/python-运算符.html` | 起草正文、优先级表与易混辨析 | 待本人复核（第 1 次课配套） |
 | `learning-materials/python-变量类型.html` | 起草正文、类型地图与练习 | **所有代码示例在本地 Python 3.13 实跑，输出逐条核对**；**4 条 python.org 来源 curl 验证 200**（访问日期 2026-10-10）；正文待本人复核 |
+| `learning-materials/python-流程控制.html` | 起草正文、执行路线图与练习答案 | **13 组代码示例 + 5 道练习答案在本地 Python 3.13.14 实跑**，输出取自真实运行结果；**5 条 python.org 来源 curl 验证 200**（访问日期 2026-10-15）；正文待本人复核 |
 | `scripts/01.py` | **本人手写** | 第一行代码，非 AI 代写 |
 
 Skill 的定位是「把可复用的方法固化下来」，不是替人完成作业——概念资料仍需本人在理解后修订。
@@ -69,3 +71,9 @@ Skill 的定位是「把可复用的方法固化下来」，不是替人完成�
 ## 提交记录
 
 - `ffa0ad2` feat: submit homework 01 py and ipynb
+- `d87caed` chore: add project-level skills (git-push-flow, concept-learner)
+- `72dbfa5` docs: add README, python learning roadmap and hdfs concept material
+- `541a67e` docs(git-push-flow): add file-tree verification and second-round push experience
+- `264b251` feat: add Python operator material and homework 02 scripts
+- `c55869c` docs: add python variable types material and sync README
+- `7b2c51a` docs(concept-learner): record lightweight form for syntax topics

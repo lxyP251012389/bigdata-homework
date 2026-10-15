@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python 流程控制学习资料</title>
+<style>
+  :root{
+    --bg:#F7F7F4;
+    --card:#FFFFFF;
+    --ink:#1F1F1D;
+    --ink2:#4A4A46;
+    --ink3:#7A7A74;
+    --line:#E3E2DC;
+    --blue:#185FA5;
+    --blue-l:#E6F1FB;
+    --blue-d:#0C447C;
+    --teal:#0F6E56;
+    --teal-l:#E1F5EE;
+    --amber:#854F0B;
+    --amber-l:#FAEEDA;
+    --red:#A32D2D;
+    --red-l:#FCEBEB;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:48px 28px 80px;}
+  h1{font-size:28px;font-weight:600;margin:0 0 8px;letter-spacing:-0.3px;}
+  .sub{color:var(--ink3);font-size:14px;margin:0 0 32px;}
+  h2{font-size:19px;font-weight:600;margin:44px 0 14px;}
+  h3{font-size:16px;font-weight:600;margin:0 0 6px;}
+  p{margin:0 0 12px;}
+  ul,ol{margin:0 0 12px;padding-left:22px;}
+  li{margin:2px 0;}
+  code{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    background:#F1EFE8;
+    padding:1px 5px;
+    border-radius:4px;
+  }
+  pre{
+    background:#2C2C2A;
+    color:#F1EFE8;
+    padding:14px 16px;
+    border-radius:10px;
+    overflow-x:auto;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    line-height:1.65;
+    margin:10px 0 14px;
+  }
+  pre code{background:none;color:inherit;padding:0;font-size:13px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 26px 20px;
+    margin:0 0 20px;
+  }
+  .card-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+  .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:14px;font-weight:600;
+    flex:0 0 auto;transform:translateY(3px);
+  }
+  .goal{
+    background:var(--blue-l);border-radius:10px;padding:10px 14px;
+    font-size:14px;color:var(--blue-d);margin:10px 0 16px;
+  }
+  .sec-t{
+    font-size:13px;font-weight:600;color:var(--ink3);
+    letter-spacing:0.4px;margin:18px 0 4px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#F1EFE8;font-weight:600;font-size:13px;}
+  td code{font-size:12.5px;}
+  .pass{
+    background:var(--teal-l);border-left:3px solid var(--teal);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#085041;margin:16px 0 0;
+  }
+  .warn{
+    background:var(--red-l);border-left:3px solid var(--red);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#501313;margin:12px 0;
+  }
+  .tip{
+    background:var(--amber-l);border-left:3px solid var(--amber);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#412402;margin:12px 0;
+  }
+  details{
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;background:#FCFCFA;margin:8px 0 12px;
+  }
+  summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--blue);}
+  details pre{margin:10px 0 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:700px){.grid2{grid-template-columns:1fr;}}
+  .mini{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FCFCFA;}
+  .mini h3{font-size:14px;}
+  .mini p{font-size:13.5px;color:var(--ink2);margin:0;}
+  ol.check{list-style:none;padding-left:0;}
+  ol.check li{padding-left:26px;position:relative;margin:6px 0;font-size:14px;}
+  ol.check li::before{
+    content:"";position:absolute;left:0;top:7px;
+    width:14px;height:14px;border:1.5px solid var(--ink3);border-radius:4px;
+  }
+  a{color:var(--blue);}
+  hr{border:none;border-top:1px solid var(--line);margin:40px 0;}
+  .foot{font-size:13px;color:var(--ink3);margin-top:36px;}
+  .tag{
+    display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;
+    background:var(--blue-l);color:var(--blue-d);margin-left:6px;
+  }
+  .figure{
+    border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px 12px;background:#FCFCFA;margin:16px 0 10px;
+  }
+  .figure figcaption{font-size:13px;color:var(--ink3);margin:0 0 10px;}
+  .legend{font-size:13px;color:var(--ink2);margin:10px 0 0;}
+  .legend span{margin-right:18px;}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px;}
+  @media print{
+    body{background:#fff;}
+    .card{break-inside:avoid;box-shadow:none;}
+    pre{background:#F1EFE8;color:#1F1F1D;}
+    details{border:none;}
+    details pre{display:block !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Python 流程控制</h1>
+  <p class="sub">第 1 次课配套资料 · 属于「语法地基」模块 · 建议 45–60 分钟学完并做完练习</p>
+
+  <div class="tip">
+    <strong>先搞清楚"流程控制"管什么：</strong>程序默认是从上往下、一行挨着一行执行的——这种"一条道走到黑"的执行方式，写不出真正的程序。流程控制就是给程序加上三种能力：<strong>会选</strong>（满足条件才走这条路）、<strong>会绕圈</strong>（同一段代码重复执行）、<strong>会中途改主意</strong>（提前跳出、跳过这一轮）。你 <code>03.ipynb</code> 里写的 <code>for i in range(1,5)</code> 和 <code>if age &gt;= 18</code>，正是前两种。
+  </div>
+
+  <h2>六条语句速览</h2>
+  <table>
+    <thead>
+      <tr><th style="width:22%">语句</th><th style="width:26%">作用</th><th style="width:26%">什么场景用它</th><th>一句话记</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>if / elif / else</code></td><td>从几条路里选一条走</td><td>判断条件、分情况处理</td><td>哪条符合走哪条</td></tr>
+      <tr><td><code>for</code></td><td>把一串东西挨个走一遍</td><td>次数或范围已知</td><td>有多少个就转多少圈</td></tr>
+      <tr><td><code>while</code></td><td>条件为真就一直转</td><td>不知道要转几次</td><td>条件不满足才停</td></tr>
+      <tr><td><code>break</code></td><td>立刻跳出整个循环</td><td>找到了、不用再找了</td><td>任务完成，收工</td></tr>
+      <tr><td><code>continue</code></td><td>跳过本轮，进入下一轮</td><td>这一项不处理，处理下一项</td><td>这个不要，下一个</td></tr>
+      <tr><td><code>pass</code></td><td>占个位，什么都不做</td><td>结构先写好，内容以后填</td><td>先留空，别报错就行</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="figure">
+    <figcaption>三种执行路线：程序在代码里"怎么走"</figcaption>
+    <svg viewBox="0 0 680 250" width="100%" role="img" aria-label="三种执行路线示意图：顺序执行、条件分支、循环">
+      <!-- 列标题 -->
+      <text x="110" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">① 顺序执行</text>
+      <text x="330" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">② 条件分支</text>
+      <text x="560" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">③ 循环</text>
+
+      <!-- 列1：顺序 -->
+      <rect x="20" y="45" width="180" height="32" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="110" y="66" text-anchor="middle" font-size="12.5" fill="#0C447C" font-family="system-ui,sans-serif">读入数据</text>
+      <line x1="110" y1="77" x2="110" y2="89" stroke="#185FA5" stroke-width="1"/>
+      <polygon points="110,98 105,88 115,88" fill="#185FA5"/>
+      <rect x="20" y="98" width="180" height="32" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="110" y="119" text-anchor="middle" font-size="12.5" fill="#0C447C" font-family="system-ui,sans-serif">判断 / 计算</text>
+      <line x1="110" y1="130" x2="110" y2="142" stroke="#185FA5" stroke-width="1"/>
+      <polygon points="110,151 105,141 115,141" fill="#185FA5"/>
+      <rect x="20" y="151" width="180" height="32" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="110" y="172" text-anchor="middle" font-size="12.5" fill="#0C447C" font-family="system-ui,sans-serif">输出结果</text>
+      <text x="110" y="205" text-anchor="middle" font-size="11.5" fill="#7A7A74" font-family="system-ui,sans-serif">一行接一行，不回头走完</text>
+
+      <!-- 列2：分支 -->
+      <polygon points="330,60 422,88 330,116 238,88" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="330" y="93" text-anchor="middle" font-size="12.5" fill="#085041" font-family="system-ui,sans-serif">条件成立？</text>
+      <line x1="330" y1="116" x2="330" y2="136" stroke="#0F6E56" stroke-width="1"/>
+      <line x1="255" y1="136" x2="405" y2="136" stroke="#0F6E56" stroke-width="1"/>
+      <line x1="255" y1="136" x2="255" y2="143" stroke="#0F6E56" stroke-width="1"/>
+      <line x1="405" y1="136" x2="405" y2="143" stroke="#0F6E56" stroke-width="1"/>
+      <polygon points="255,151 250,141 260,141" fill="#0F6E56"/>
+      <polygon points="405,151 400,141 410,141" fill="#0F6E56"/>
+      <text x="240" y="132" text-anchor="end" font-size="11" fill="#0F6E56" font-family="system-ui,sans-serif">是</text>
+      <text x="420" y="132" font-size="11" fill="#7A7A74" font-family="system-ui,sans-serif">否</text>
+      <rect x="215" y="151" width="80" height="32" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="255" y="172" text-anchor="middle" font-size="12.5" fill="#085041" font-family="system-ui,sans-serif">走 A 路</text>
+      <rect x="365" y="151" width="80" height="32" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="405" y="172" text-anchor="middle" font-size="12.5" fill="#085041" font-family="system-ui,sans-serif">走 B 路</text>
+      <text x="330" y="205" text-anchor="middle" font-size="11.5" fill="#7A7A74" font-family="system-ui,sans-serif">满足就走这条，不满足走那条</text>
+
+      <!-- 列3：循环 -->
+      <rect x="470" y="45" width="180" height="32" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="560" y="66" text-anchor="middle" font-size="12.5" fill="#0C447C" font-family="system-ui,sans-serif">判断条件</text>
+      <line x1="560" y1="77" x2="560" y2="89" stroke="#185FA5" stroke-width="1"/>
+      <polygon points="560,98 555,88 565,88" fill="#185FA5"/>
+      <rect x="470" y="98" width="180" height="32" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="560" y="119" text-anchor="middle" font-size="12.5" fill="#0C447C" font-family="system-ui,sans-serif">执行循环体</text>
+      <path d="M470,114 L452,114 L452,61 L462,61" fill="none" stroke="#185FA5" stroke-width="1"/>
+      <polygon points="470,61 460,56 460,66" fill="#185FA5"/>
+      <text x="560" y="205" text-anchor="middle" font-size="11.5" fill="#7A7A74" font-family="system-ui,sans-serif">转完一圈，回头再判断一次</text>
+    </svg>
+    <p class="legend">
+      <span><i class="sw" style="background:#E6F1FB;border:1px solid #185FA5"></i>蓝：顺序与循环里的"机器"</span>
+      <span><i class="sw" style="background:#E1F5EE;border:1px solid #0F6E56"></i>绿：需要判断的地方</span>
+    </p>
+  </figure>
+
+  <p><strong>图怎么看：</strong>三种路线的区别只在"箭头往哪拐"。顺序执行的箭头永远向下；分支的箭头在一个菱形处分岔，走哪条取决于条件；循环的箭头绕回了上方——<strong>那个向左绕回的箭头就是循环的本质</strong>。写循环时脑子里的画面应该是这条回路，而不是"重复写了很多行代码"。循环之所以存在，是因为它能用 3 行代码表达 100 万次重复。</p>
+
+  <h2>逐个认识</h2>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">1</span>
+      <h3>if / elif / else：从几条路里选一条</h3>
+    </div>
+    <div class="goal">重点记住两件事：<strong>从上往下判断，命中第一条就收工</strong>；条件后面必须有冒号，下一行必须缩进。</div>
+
+    <p>这就是你 <code>03.ipynb</code> 里写的那段，把它跑一遍：</p>
+
+<pre><code>age = 12
+if age &gt;= 18:
+    print("你已经成年了")
+    print("你已经可以独立生活了")
+elif age &gt;= 13:
+    print("你是青少年")
+else:
+    print("你还未成年")
+
+# 输出：你还未成年</code></pre>
+
+    <div class="sec-t">把 age 换成不同的值，看它走哪条路</div>
+<pre><code>age=20 -&gt; 成年
+age=15 -&gt; 青少年
+age=12 -&gt; 未成年</code></pre>
+
+    <div class="warn"><strong>顺序决定结果：</strong>如果把 <code>if age &gt;= 18</code> 和 <code>elif age &gt;= 13</code> 换个位置，age=20 会先命中 <code>&gt;= 13</code>，输出"青少年"——<strong>分支是从上往下匹配的，第一条命中后，后面的全部跳过</strong>。所以写多个 <code>elif</code> 时，条件要从窄到宽（或从宽到窄）排好序，别写乱。另外 <code>else</code> 最多一个，<code>elif</code> 可以有很多个，都可以不写。</div>
+
+    <div class="sec-t">条件里能放什么</div>
+    <p>任何能算出真 / 假的东西都行：比较（<code>&gt; &lt; == != &gt;= &lt;=</code>）、<code>in</code>、<code>and / or / not</code>。有意思的是，Python 还允许直接塞一个值进去——下面这些都会被当成"假"：</p>
+<pre><code>print(bool(0), bool(""), bool([]), bool({}), bool(None))
+# 输出：False False False False False
+
+print(bool("0"), bool([0]), bool(-1))
+# 输出：True True True   ← "0" 和 [0] 都非空，是真</code></pre>
+    <p>所以写"列表不为空才处理"时，直接 <code>if my_list:</code> 就够了，不用写 <code>if len(my_list) &gt; 0:</code>。</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">2</span>
+      <h3>for 循环：把一串东西挨个走一遍</h3>
+    </div>
+    <div class="goal">记住 <code>range(5)</code> 是 0 到 4，<strong>不含 5</strong>——这是初学者第一个大坑。</div>
+
+    <p>你在 <code>03.ipynb</code> 里写的 <code>for i in range(1,5)</code> 输出 1 2 3 4，因为 range 是"左闭右开"：包含起点，不包含终点。</p>
+
+    <div class="sec-t">range 的四种写法（全部实跑结果）</div>
+    <table>
+      <thead><tr><th style="width:32%">写法</th><th style="width:40%">得到什么</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><code>range(5)</code></td><td><code>[0, 1, 2, 3, 4]</code></td><td>从 0 开始，共 5 个数</td></tr>
+        <tr><td><code>range(2, 6)</code></td><td><code>[2, 3, 4, 5]</code></td><td>从 2 到 5（不含 6）</td></tr>
+        <tr><td><code>range(1, 11, 3)</code></td><td><code>[1, 4, 7, 10]</code></td><td>第三个参数是步长</td></tr>
+        <tr><td><code>range(5, 0, -1)</code></td><td><code>[5, 4, 3, 2, 1]</code></td><td>步长为负就是倒数</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-t">for 不只能数数，它能遍历任何"一串东西"</div>
+<pre><code>for ch in "abc":            # 字符串：一个个字符
+    print(ch, end="|")
+# 输出：a|b|c|
+
+for x in [10, 20, 30]:      # 列表：一个个元素
+    print(x, end=" ")
+# 输出：10 20 30
+
+for k in {"姓名": "小明", "年龄": 19}:   # 字典：默认只给键
+    print(k, end=" ")
+# 输出：姓名 年龄
+
+for k, v in info.items():   # 要键和值就加 .items()
+    print(f"{k}={v}", end="  ")
+# 输出：姓名=小明  年龄=19</code></pre>
+
+    <div class="tip"><strong>遍历字典别踩坑：</strong>直接 <code>for x in 字典</code> 拿到的是<strong>键</strong>，不是值。想同时要键和值就写 <code>for k, v in 字典.items()</code>；只要值就用 <code>字典.values()</code>。</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">3</span>
+      <h3>while 循环：条件为真就一直转</h3>
+    </div>
+    <div class="goal">记住循环体里必须有东西能让条件<strong>趋向结束</strong>，否则就是死循环。</div>
+
+    <p>什么时候用 while 而不是 for？<strong>当你不确定要转几次时。</strong>比如"一直问用户输入，直到他输入 q 为止"。确定次数的（遍历列表、跑 100 次）用 for 更清楚。</p>
+
+<pre><code>count = 3
+while count &gt; 0:
+    print("倒计时", count)
+    count -= 1        # ← 这行是关键，少了它永远转不完
+print("发射！")
+
+# 输出：
+# 倒计时 3
+# 倒计时 2
+# 倒计时 1
+# 发射！</code></pre>
+
+    <div class="warn"><strong>死循环怎么来的：</strong>如果把 <code>count -= 1</code> 删掉，<code>count</code> 永远是 3，条件永远成立，程序会一直打印"倒计时 3"——这就是死循环。<strong>在 VS Code 里按 <code>Ctrl+C</code>（notebook 里点 ■ 停止）就能中断。</strong>写 while 时先问自己：这个条件最终会变假吗？是什么让它变假的？</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">4</span>
+      <h3>break / continue / pass：循环里的三个"开关"</h3>
+    </div>
+    <div class="goal">三个词都<strong>只作用于循环</strong>，但做的事完全不同，别混。</div>
+
+<pre><code>for i in range(1, 10):
+    if i == 5:
+        break          # 整个循环直接结束
+    print(i, end=" ")
+# 输出：1 2 3 4      ← 到 5 就彻底停了
+
+for i in range(1, 6):
+    if i % 2 == 0:
+        continue       # 只跳过这一轮，继续下一轮
+    print(i, end=" ")
+# 输出：1 3 5        ← 偶数被跳过，奇数照常
+
+for i in range(3):
+    if i == 1:
+        pass           # 什么都不做（但语法上必须有东西占位）
+    else:
+        print("处理", i)
+# 输出：处理 0 / 处理 2   ← 不报错，i==1 时安静跳过</code></pre>
+
+    <table>
+      <thead><tr><th style="width:18%">语句</th><th style="width:34%">效果</th><th>典型场景</th></tr></thead>
+      <tbody>
+        <tr><td><code>break</code></td><td>跳出<strong>整个</strong>循环，后面的轮次不再执行</td><td>找到了目标、密码试错次数用完</td></tr>
+        <tr><td><code>continue</code></td><td>结束<strong>本轮</strong>，直接开始下一轮</td><td>跳过无效数据（空行、负数）</td></tr>
+        <tr><td><code>pass</code></td><td>占位，什么都不做</td><td>结构先写出来，细节以后再填</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sec-t">顺带一个冷门但好用的语法：for-else</div>
+    <p><code>for</code> 后面可以跟一个 <code>else</code>，循环<strong>正常走完</strong>才执行；如果中途被 <code>break</code> 了，<code>else</code> 就不执行。可以拿来写"找遍了都没找到"这种逻辑：</p>
+<pre><code>for i in range(3):
+    print(i, end=" ")
+else:
+    print("&lt;- 正常结束走 else")
+# 输出：0 1 2 &lt;- 正常结束走 else
+
+for i in range(5):
+    if i == 2:
+        break
+else:
+    print("这行不会打印（因为被 break 了）")
+# 输出：（无）</code></pre>
+  </div>
+
+  <!-- 5 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">5</span>
+      <h3>嵌套循环：循环里面还有循环</h3>
+    </div>
+    <div class="goal">记住执行顺序：<strong>内层跑完一整圈，外层才动一步。</strong></div>
+
+<pre><code>for i in range(1, 4):        # 外层：i = 1, 2, 3
+    for j in range(1, i + 1):    # 内层：每次都从 1 数到 i
+        print(f"{j}x{i}={i*j}", end="  ")
+    print()                   # 内层跑完，换行
+
+# 输出：
+# 1x1=1
+# 1x2=2  2x2=4
+# 1x3=3  2x3=6  3x3=9</code></pre>
+
+    <p>九九乘法表就是这么来的。注意 <code>print()</code> 的位置——它在外层循环里、内层循环外，所以每一行打印完才换行。</p>
+
+    <div class="tip"><strong>别嵌套太深：</strong>三层以上就该考虑拆成函数了（第 2 次课会学），否则代码会变得很难读。还有个小工具：<code>print(..., end=" ")</code> 里的 <code>end</code> 能把默认的换行改成空格，打印表格时很有用。</div>
+  </div>
+
+  <h2>拿它们干活：四个真实场景</h2>
+
+  <figure class="figure">
+    <figcaption>流程控制在实际代码里的四种典型用法</figcaption>
+    <svg viewBox="0 0 680 120" width="100%" role="img" aria-label="流程控制四种典型应用场景">
+      <rect x="8" y="12" width="156" height="92" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="86" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">输入校验</text>
+      <text x="86" y="65" text-anchor="middle" font-size="11.5" fill="#185FA5" font-family="system-ui,sans-serif">while + if</text>
+      <text x="86" y="85" text-anchor="middle" font-size="11.5" fill="#4A4A46" font-family="system-ui,sans-serif">不合法就再问一次</text>
+
+      <rect x="174" y="12" width="156" height="92" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="252" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#085041" font-family="system-ui,sans-serif">批量统计</text>
+      <text x="252" y="65" text-anchor="middle" font-size="11.5" fill="#0F6E56" font-family="system-ui,sans-serif">for + 累加</text>
+      <text x="252" y="85" text-anchor="middle" font-size="11.5" fill="#4A4A46" font-family="system-ui,sans-serif">把一列数据跑一遍</text>
+
+      <rect x="340" y="12" width="156" height="92" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+      <text x="418" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C" font-family="system-ui,sans-serif">找到即停</text>
+      <text x="418" y="65" text-anchor="middle" font-size="11.5" fill="#185FA5" font-family="system-ui,sans-serif">for + break</text>
+      <text x="418" y="85" text-anchor="middle" font-size="11.5" fill="#4A4A46" font-family="system-ui,sans-serif">命中就跳出循环</text>
+
+      <rect x="506" y="12" width="156" height="92" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text x="584" y="42" text-anchor="middle" font-size="13" font-weight="600" fill="#085041" font-family="system-ui,sans-serif">菜单轮转</text>
+      <text x="584" y="65" text-anchor="middle" font-size="11.5" fill="#0F6E56" font-family="system-ui,sans-serif">while True + break</text>
+      <text x="584" y="85" text-anchor="middle" font-size="11.5" fill="#4A4A46" font-family="system-ui,sans-serif">直到用户选退出</text>
+    </svg>
+  </figure>
+
+  <div class="sec-t">场景 A：统计成绩——for + 条件 + 累加</div>
+<pre><code>scores = [88, 45, 92, 60, 73]
+total = 0
+passed = 0
+for s in scores:
+    total += s
+    if s &gt;= 60:
+        passed += 1
+print("总分", total, "平均", total / len(scores), "及格人数", passed)
+# 输出：总分 358 平均 71.6 及格人数 4</code></pre>
+  <p>这就是"累加器"模式：先准备一个 0，循环里往里加。<strong>数据统计十有八九都是这个套路</strong>——求和、计数、找最大，全靠"循环 + 一个变量记着结果"。</p>
+
+  <div class="sec-t">场景 B：猜数字——while True + break</div>
+<pre><code>target = 7
+guesses = [3, 9, 7]          # 真实程序里这里换成 input()
+for g in guesses:
+    if g &gt; target:
+        print(f"猜 {g}：大了")
+    elif g &lt; target:
+        print(f"猜 {g}：小了")
+    else:
+        print(f"猜 {g}：对了！")
+        break                 # 猜中就收工，不再继续
+
+# 输出：
+# 猜 3：小了
+# 猜 9：大了
+# 猜 7：对了！</code></pre>
+  <p>注意到没：<strong>break 让程序在"任务完成"的那一刻停下来</strong>。如果不用 break，猜中之后还会继续处理后面的猜测，逻辑就错了。</p>
+
+  <div class="sec-t">场景 C：找最大值——自己写一遍比背 max() 有用</div>
+<pre><code>nums = [88, 45, 92, 60, 73]
+biggest = nums[0]            # 先假设第一个最大
+for n in nums:
+    if n &gt; biggest:          # 遇到更大的就更新
+        biggest = n
+print("最大：", biggest, "| 对照 max()：", max(nums))
+# 输出：最大： 92 | 对照 max()： 92</code></pre>
+  <p>"先假设第一个，再逐个挑战"是寻找类算法的通用思路。想清楚这个，以后学排序、找极值都不陌生。</p>
+
+  <h2>易混辨析</h2>
+  <table>
+    <thead><tr><th style="width:26%">容易混的一对</th><th style="width:37%">区别</th><th>怎么记</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>for</code> / <code>while</code></td>
+        <td>for 用于"有一串东西要挨个处理"（次数/范围已知）；while 用于"条件不满足才停"（次数未知）</td>
+        <td>能数清用 for，数不清用 while</td>
+      </tr>
+      <tr>
+        <td><code>break</code> / <code>continue</code></td>
+        <td>break 结束整个循环；continue 只跳过本轮</td>
+        <td>break = 退学，continue = 请假一节课</td>
+      </tr>
+      <tr>
+        <td><code>range(5)</code> / <code>range(1,5)</code></td>
+        <td>前者的 5 是"个数"，后者两个数都是"边界"，且右边界取不到</td>
+        <td>一个参数 = 从 0 数几个；两个参数 = 左闭右开</td>
+      </tr>
+      <tr>
+        <td><code>if x == 1</code> / <code>if x = 1</code></td>
+        <td>前者是比较，后者是赋值，运行会直接报 <code>SyntaxError: invalid syntax</code></td>
+        <td>比较用两个等号，永远</td>
+      </tr>
+      <tr>
+        <td><code>for i in 5</code> / <code>for i in range(5)</code></td>
+        <td>数字不能被遍历，前者报 <code>TypeError: 'int' object is not iterable</code></td>
+        <td>想数数就得套 range</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn"><strong>另外三个高频报错，记住长相就不会慌：</strong><br>
+    · <code>SyntaxError: expected ':'</code> → 条件 / 循环那一行的末尾忘了冒号（你 <code>04.ipynb</code> 里的 <code>def 取名(姓,名)</code> 就是这个问题）<br>
+    · <code>IndentationError: expected an indented block after 'if' statement on line 2</code> → <code>if</code> 下面那行没缩进<br>
+    · <code>IndentationError: unexpected indent</code> → 缩进多了，或者该对齐的没对齐（Python 靠缩进划分代码块，4 个空格是约定；<strong>同一块里千万别有的行用 Tab、有的行用空格</strong>）
+  </div>
+
+  <h2>练习</h2>
+  <p>别急着看答案，先自己写。写完对着答案比——重点看"我为什么没想到那一步"，而不是"我的能不能跑"。</p>
+
+  <details>
+    <summary>1. 打印 1~100 中所有 3 的倍数</summary>
+<pre><code>for i in range(1, 101):
+    if i % 3 == 0:
+        print(i, end=" ")
+# 输出：3 6 9 12 15 18 ... 93 96 99，共 33 个</code></pre>
+    <p>要点：<code>%</code> 取余，能整除就是 0；范围要写到 <code>101</code> 才能包含 100，这就是"左闭右开"的直接体现。</p>
+  </details>
+
+  <details>
+    <summary>2. 输入成绩，打印等级：90 以上 A，80 以上 B，60 以上 C，其余 D</summary>
+<pre><code>score = 85
+if score &gt;= 90:
+    g = "A"
+elif score &gt;= 80:
+    g = "B"
+elif score &gt;= 60:
+    g = "C"
+else:
+    g = "D"
+print(g)
+
+# 实跑：95 -&gt; A    85 -&gt; B    72 -&gt; C    58 -&gt; D</code></pre>
+    <p>要点：<strong>不用写成 <code>if 80 &lt;= score &lt; 90</code></strong>（虽然 Python 支持），因为 <code>elif</code> 天然就排除了上面的区间——能走到 <code>elif score &gt;= 80</code> 时，成绩必然已经小于 90 了。这是 if/elif 最省事的地方。</p>
+  </details>
+
+  <details>
+    <summary>3. 用 while 循环算 1+2+3+...+100</summary>
+<pre><code>i = 1
+total = 0
+while i &lt;= 100:
+    total += i
+    i += 1
+print("结果：", total)
+# 输出：结果： 5050</code></pre>
+    <p>要点：两个变量分工明确——<code>i</code> 管"数到哪了"，<code>total</code> 管"攒了多少"。<code>i += 1</code> 是让循环能结束的关键。<br><strong>对照思考：</strong>这题用 for 写更短：<code>sum(range(1, 101))</code>，一行搞定。但手写一遍 while 才能理解"累加"到底在做什么。</p>
+  </details>
+
+  <details>
+    <summary>4. 猜数字游戏：最多猜 3 次，猜中提前结束，都没中就说答案</summary>
+<pre><code>target = 7
+for times in range(1, 4):
+    guess = int(input("猜一个数："))     # 实际用输入
+    if guess == target:
+        print(f"猜对了，你用了 {times} 次")
+        break
+    elif guess &gt; target:
+        print("太大了")
+    else:
+        print("太小了")
+else:
+    print("三次都没猜中，答案是", target)
+
+# 模拟猜 3、9、7 的实跑输出：
+# 第1次 猜3：太小
+# 第2次 猜9：太大
+# 第3次 猜7：猜对了，你用了3次</code></pre>
+    <p>要点：这是"for + break + else"的经典组合——<strong>猜中就走 break（不执行 else），三次都没中循环正常结束，才执行 else 提示答案</strong>。<code>int(input(...))</code> 是把输入的文字转成整数，不转的话"7"和 7 永远不相等。</p>
+  </details>
+
+  <details>
+    <summary>5. 找出列表里的最大值（不许用 max）</summary>
+<pre><code>nums = [88, 45, 92, 60, 73]
+biggest = nums[0]
+for n in nums:
+    if n &gt; biggest:
+        biggest = n
+print("最大：", biggest)
+# 输出：最大： 92（与 max(nums) 结果一致）</code></pre>
+    <p>要点：<code>biggest = nums[0]</code> 不能写成 <code>biggest = 0</code>——如果列表里全是负数，从 0 开始就错了。<strong>"用数据自己的第一个值做起点"是个值得记住的习惯。</strong></p>
+  </details>
+
+  <h2>自检清单</h2>
+  <p>能对着下面每条说清"是什么、什么时候用"，这节就算过关了：</p>
+  <ol class="check">
+    <li>能说清 if / elif / else 的判断顺序，并知道多个条件时为什么要注意排列顺序</li>
+    <li>记得 <code>range(5)</code> 是 0~4，且能说出三种 range 写法的区别</li>
+    <li>能判断什么时候该用 for、什么时候该用 while</li>
+    <li>知道 while 写错会死循环，以及怎么中断（Ctrl+C）</li>
+    <li>能准确区分 break 和 continue 的作用范围</li>
+    <li>能自己写出"循环 + 累加"来求总数、平均值、最大值</li>
+    <li>看到 SyntaxError / IndentationError 时，知道先去查冒号和缩进</li>
+    <li>能独立写出猜数字游戏，并解释为什么猜中时要 break</li>
+  </ol>
+
+  <div class="pass">
+    <strong>通关标志：</strong>不看答案，独立写出猜数字游戏（限次数 + 猜中提前结束 + 都没中给答案），并跑通。能做到，说明你已经掌握了循环、分支和跳转的配合——这正是第 1 次课最核心的一关。
+  </div>
+
+  <hr>
+
+  <h2>参考来源</h2>
+  <ul>
+    <li>Python 官方教程 · <a href="https://docs.python.org/zh-cn/3/tutorial/controlflow.html" target="_blank" rel="noopener">更多控制流工具</a>（if 语句、for 语句、range、break/continue、循环的 else 子句）<span class="tag">2026-10-15 访问</span></li>
+    <li>Python 官方教程 · <a href="https://docs.python.org/zh-cn/3/tutorial/introduction.html" target="_blank" rel="noopener">3. 非正式介绍</a>（while 循环与条件判断的入门写法）<span class="tag">2026-10-15 访问</span></li>
+    <li>Python 语言参考 · <a href="https://docs.python.org/zh-cn/3/reference/compound_stmts.html" target="_blank" rel="noopener">复合语句</a>（if / while / for 的完整语法定义与缩进规则）<span class="tag">2026-10-15 访问</span></li>
+    <li>Python 标准库 · <a href="https://docs.python.org/zh-cn/3/library/stdtypes.html" target="_blank" rel="noopener">内置类型</a>（range 对象与真值测试规则）<span class="tag">2026-10-15 访问</span></li>
+    <li>Python 官方教程 · <a href="https://docs.python.org/zh-cn/3/tutorial/datastructures.html" target="_blank" rel="noopener">数据结构</a>（for 遍历字典时 .items() / .values() 的用法）<span class="tag">2026-10-15 访问</span></li>
+  </ul>
+
+  <p class="foot">
+    本资料所有代码示例均在本地 Python 3.13.14 实跑验证，输出值取自真实运行结果（非手写）。<br>
+    来源链接于 2026-10-15 逐条验证可访问；正文内容仍需本人阅读复核后使用。
+  </p>
+
+</div>
+</body>
+</html>
