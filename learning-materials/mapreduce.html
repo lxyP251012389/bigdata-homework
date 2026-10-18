@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MapReduce 学习资料</title>
+<style>
+  :root{
+    --bg:#F7F7F4;
+    --card:#FFFFFF;
+    --ink:#1F1F1D;
+    --ink2:#4A4A46;
+    --ink3:#7A7A74;
+    --line:#E3E2DC;
+    --blue:#185FA5;
+    --blue-l:#E6F1FB;
+    --blue-d:#0C447C;
+    --teal:#0F6E56;
+    --teal-l:#E1F5EE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:48px 28px 80px;}
+  h1{font-size:28px;font-weight:600;margin:0 0 8px;letter-spacing:-0.3px;}
+  .sub{color:var(--ink3);font-size:14px;margin:0 0 32px;}
+  h2{font-size:19px;font-weight:600;margin:44px 0 14px;}
+  h3{font-size:16px;font-weight:600;margin:0 0 6px;}
+  p{margin:0 0 12px;}
+  ul,ol{margin:0 0 12px;padding-left:22px;}
+  li{margin:2px 0;}
+  code{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    background:#F1EFE8;
+    padding:1px 5px;
+    border-radius:4px;
+  }
+  pre{
+    background:#2C2C2A;
+    color:#F1EFE8;
+    padding:14px 16px;
+    border-radius:10px;
+    overflow-x:auto;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:13px;
+    line-height:1.65;
+    margin:10px 0 14px;
+  }
+  pre code{background:none;color:inherit;padding:0;font-size:13px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 26px 20px;
+    margin:0 0 20px;
+  }
+  .card-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+  .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:14px;font-weight:600;
+    flex:0 0 auto;transform:translateY(3px);
+  }
+  .goal{
+    background:var(--blue-l);border-radius:10px;padding:10px 14px;
+    font-size:14px;color:var(--blue-d);margin:10px 0 16px;
+  }
+  .sec-t{
+    font-size:13px;font-weight:600;color:var(--ink3);
+    letter-spacing:0.4px;margin:18px 0 4px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:#F1EFE8;font-weight:600;font-size:13px;}
+  td code{font-size:12.5px;}
+  .pass{
+    background:var(--teal-l);border-left:3px solid var(--teal);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:#085041;margin:16px 0 0;
+  }
+  .warn{
+    background:#F1EFE8;border-left:3px solid var(--ink3);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:var(--ink);margin:12px 0;
+  }
+  .tip{
+    background:var(--blue-l);border-left:3px solid var(--blue);
+    border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;
+    color:var(--blue-d);margin:12px 0;
+  }
+  details{
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;background:#FCFCFA;margin:8px 0 12px;
+  }
+  summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--blue);}
+  details pre{margin:10px 0 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:700px){.grid2{grid-template-columns:1fr;}}
+  .mini{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#FCFCFA;}
+  .mini h3{font-size:14px;}
+  .mini p{font-size:13.5px;color:var(--ink2);margin:0;}
+  ol.check{list-style:none;padding-left:0;}
+  ol.check li{padding-left:26px;position:relative;margin:6px 0;font-size:14px;}
+  ol.check li::before{
+    content:"";position:absolute;left:0;top:7px;
+    width:14px;height:14px;border:1.5px solid var(--ink3);border-radius:4px;
+  }
+  a{color:var(--blue);}
+  hr{border:none;border-top:1px solid var(--line);margin:40px 0;}
+  .foot{font-size:13px;color:var(--ink3);margin-top:36px;}
+  .tag{
+    display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;
+    background:var(--blue-l);color:var(--blue-d);margin-left:6px;
+  }
+  .figure{
+    border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px 12px;background:#FCFCFA;margin:16px 0 10px;
+  }
+  .figure figcaption{font-size:13px;color:var(--ink3);margin:0 0 10px;}
+  .legend{font-size:13px;color:var(--ink2);margin:10px 0 0;}
+  .legend span{margin-right:18px;}
+  .sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px;}
+  @media print{
+    body{background:#fff;}
+    .card{break-inside:avoid;box-shadow:none;}
+    pre{background:#F1EFE8;color:#1F1F1D;}
+    details{border:none;}
+    details pre{display:block !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>MapReduce</h1>
+  <p class="sub">大数据四件套 ② · 属于「分布式计算」模块 · 建议 45–60 分钟学完并做完练习</p>
+
+  <div class="tip">
+    <strong>先搞清楚它解决什么问题：</strong>数据太大，一台机器装不下、算不完。MapReduce 的做法不是"造一台更快的机器"，而是<strong>把同一个简单函数复制到几百台机器上，让每台只处理一小块数据</strong>。你要写的只有两个函数——<code>map</code> 和 <code>reduce</code>；至于怎么切数据、怎么分发、某台机器挂了怎么办，全部由框架负责。
+  </div>
+
+  <h2>MapReduce 速览</h2>
+  <table>
+    <thead>
+      <tr><th style="width:20%">维度</th><th>内容</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>它是什么</td><td>一种<strong>分布式计算的编程模型</strong>：把一次计算拆成 Map 与 Reduce 两个阶段，框架负责分发、排序与容错</td></tr>
+      <tr><td>谁提出的</td><td>Google 于 2004 年发表的论文《MapReduce: Simplified Data Processing on Large Clusters》（Dean &amp; Ghemawat，OSDI'04）；<strong>Apache Hadoop 是它的开源实现</strong></td></tr>
+      <tr><td>唯一数据形态</td><td>从头到尾只认 <code>&lt;key, value&gt;</code> 键值对，输入是键值对，输出也是键值对</td></tr>
+      <tr><td>并行单位</td><td>输入被切成 N 个<strong>分片（InputSplit）</strong>，一个分片启动一个 Map 任务；Reduce 任务的数量由用户在作业里指定</td></tr>
+      <tr><td>典型任务</td><td>词频统计、日志清洗、倒排索引、按维度分组聚合、大表连接（join）</td></tr>
+      <tr><td>不擅长</td><td>需要<strong>多轮迭代</strong>的计算（机器学习训练、图计算）、交互式即席查询、数据量小到单机就够的场景</td></tr>
+    </tbody>
+  </table>
+
+  <h2>四个必须理解的点</h2>
+
+  <!-- 1 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">1</span>
+      <h3>一切都是键值对</h3>
+    </div>
+    <div class="goal">记住这条官方表述：框架<strong>只</strong>处理 <code>&lt;key, value&gt;</code> 对。</div>
+
+    <p>MapReduce 框架把作业的输入看成一组 <code>&lt;key, value&gt;</code> 对，产出的也是一组 <code>&lt;key, value&gt;</code> 对，而且<strong>输出的类型可以和输入完全不同</strong>。整条链路上的类型是这么走的：</p>
+
+<pre><code>(input) &lt;k1, v1&gt;  →  map  →  &lt;k2, v2&gt;  →  combine  →  &lt;k2, v2&gt;  →  reduce  →  &lt;k3, v3&gt;  (output)</code></pre>
+
+    <p>在 Hadoop 里，key 和 value 都必须能被框架序列化（实现 <code>Writable</code> 接口）；此外 <strong>key 还必须能比较大小</strong>（实现 <code>WritableComparable</code>）——因为框架要给 key 排序，排序是后面 Shuffle 能"把相同 key 聚到一起"的前提。</p>
+
+    <div class="tip"><strong>为什么非要键值对？</strong>因为"按 key 分组"是整个模型唯一的汇聚手段。Reduce 之所以能把散落在几百台机器上的数据合并起来，靠的就是"key 相同即同类"这条约定。没有 key，就没有办法决定哪条数据该送到哪个 Reducer 去。</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">2</span>
+      <h3>分片：并行的起点</h3>
+    </div>
+    <div class="goal">一句话：<strong>一个 InputSplit 对应一个 Map 任务</strong>。</div>
+
+    <p><code>InputSplit</code> 表示"交给单个 Mapper 处理的那一份数据"。<code>InputFormat</code> 负责三件事：校验输入、把输入文件切成若干逻辑 <code>InputSplit</code>、再提供 <code>RecordReader</code> 把字节流翻成一条条记录喂给 Mapper。官方原话是：框架为 <code>InputFormat</code> 生成的<strong>每一个 InputSplit 派生一个 map 任务</strong>。</p>
+
+    <p>对文件型输入，默认按文件<strong>总字节数</strong>切分；<strong>HDFS 的块大小（blocksize）被视为分片大小的上限</strong>，下限可通过 <code>mapreduce.input.fileinputformat.split.minsize</code> 配置。这里正好接上 <a href="./hdfs.html">hdfs.html</a>——HDFS 负责把大文件切成块存起来，MapReduce 负责在这些块所在的位置上就地计算。</p>
+
+    <div class="pass"><strong>数据本地性（最重要的一条设计思想）：</strong>通常计算节点和存储节点是同一批机器，MapReduce 框架与 HDFS 跑在相同的节点集合上。这让框架能够<strong>把任务调度到数据已经存在的节点上执行</strong>，从而在整个集群上获得非常高的聚合带宽。这就是常说的"移动计算比移动数据便宜"。</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">3</span>
+      <h3>Shuffle：MapReduce 的心脏</h3>
+    </div>
+    <div class="goal">这是<strong>框架做的</strong>，你的代码里看不到它，但它往往是最耗时、最耗网络的一步。</div>
+
+    <p>官方把 Reducer 的工作分成三个阶段：shuffle、sort、reduce。</p>
+
+    <table>
+      <thead><tr><th style="width:16%">阶段</th><th style="width:42%">做了什么</th><th>备注</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Shuffle</strong></td><td>Reducer 通过 HTTP 把<strong>所有 Mapper 输出中属于自己的那一个分区</strong>抓过来</td><td>跨机器传输，最贵的一步</td></tr>
+        <tr><td><strong>Sort</strong></td><td>按 key 排序并分组——不同的 Mapper 可能输出了同一个 key，框架在此把它们汇到一起</td><td>与 shuffle <strong>同时</strong>发生，边抓边归并</td></tr>
+        <tr><td><strong>Reduce</strong></td><td>对每个 <code>&lt;key, 值的列表&gt;</code> 调用一次 <code>reduce()</code></td><td>输出通常直接写进文件系统</td></tr>
+      </tbody>
+    </table>
+
+    <p>决定"哪个 key 去哪个 Reducer"的组件叫 <code>Partitioner</code>，默认实现是 <code>HashPartitioner</code>（对 key 取哈希）。<strong>分区数恒等于 reduce 任务数</strong>。</p>
+
+    <div class="tip"><strong>Reduce 任务数怎么定？</strong>官方给出的经验值是 <code>0.95</code> 或 <code>1.75</code> 乘以（节点数 × 每节点最大容器数）。取 0.95 时所有 reduce 可以立刻启动；取 1.75 时快的节点会跑完第一轮再接第二轮，负载更均衡。如果根本不需要归约，把 reduce 任务数设成 <strong>0</strong> 也是合法的——此时 map 的输出直接落到文件系统，且框架不会排序。</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <div class="card-head">
+      <span class="num">4</span>
+      <h3>Combiner：可选的加速器</h3>
+    </div>
+    <div class="goal">作用是<strong>在 Mapper 端先做一次局部聚合</strong>，减少 Map 到 Reduce 之间要传的数据量。</div>
+
+    <p>Combiner 通过 <code>Job.setCombinerClass()</code> 指定，是一个可选组件。以词频统计为例，如果某个 Map 任务的输出里 <code>hadoop</code> 出现了 4 次，不加 Combiner 就要把 4 个 <code>&lt;hadoop, 1&gt;</code> 都传过网络；加了 Combiner 之后，本地先合成一个 <code>&lt;hadoop, 4&gt;</code>，只传 1 个。</p>
+
+    <div class="warn"><strong>易错：</strong>Combiner <strong>不是任何场景都能加</strong>。它要求运算满足交换律和结合律——求和、求最大值、求最小值可以；<strong>求平均值不行</strong>（详见后面「易混辨析」第 4 组，附实跑数字）。另外框架只保证 Combiner <em>可能</em>被调用，不保证一定被调用，所以正确性绝不能依赖它。</div>
+  </div>
+
+  <h2>核心机制：一次作业的完整数据流</h2>
+
+  <figure class="figure">
+    <figcaption>MapReduce 数据流：三个分片并行 map → 汇入 Shuffle → 分给多个 Reduce → 输出结果</figcaption>
+    <svg viewBox="0 0 860 470" width="100%" role="img" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,'Microsoft YaHei',sans-serif">
+      <title>MapReduce 数据流</title>
+      <desc>三个输入分片各启动一个 Map 任务，Map 输出汇入 Shuffle 阶段进行按 key 排序与分区，再分给三个 Reduce 任务，最后各自输出一个结果文件。蓝色为作业代码，绿色为框架负责的部分。</desc>
+      <defs>
+        <marker id="arw" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 z" fill="#7A7A74"/>
+        </marker>
+      </defs>
+
+      <!-- Row 1 输入分片 -->
+      <g>
+        <rect x="0" y="30" width="200" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="100" y="54" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">输入分片 1</text>
+        <text x="100" y="70" text-anchor="middle" font-size="11" fill="#0F6E56">一个分片 = 一个 Map</text>
+      </g>
+      <g>
+        <rect x="245" y="30" width="200" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="345" y="54" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">输入分片 2</text>
+        <text x="345" y="70" text-anchor="middle" font-size="11" fill="#0F6E56">一个分片 = 一个 Map</text>
+      </g>
+      <g>
+        <rect x="490" y="30" width="200" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="590" y="54" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">输入分片 3</text>
+        <text x="590" y="70" text-anchor="middle" font-size="11" fill="#0F6E56">一个分片 = 一个 Map</text>
+      </g>
+
+      <!-- arrows 1 -> 2 -->
+      <line x1="100" y1="76" x2="100" y2="98" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="345" y1="76" x2="345" y2="98" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="590" y1="76" x2="590" y2="98" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+
+      <!-- Row 2 Map -->
+      <g>
+        <rect x="0" y="100" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="100" y="126" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Map 任务 1</text>
+        <text x="100" y="145" text-anchor="middle" font-size="11.5" fill="#185FA5">跑的是同一份代码</text>
+      </g>
+      <g>
+        <rect x="245" y="100" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="345" y="126" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Map 任务 2</text>
+        <text x="345" y="145" text-anchor="middle" font-size="11.5" fill="#185FA5">只是喂的数据不同</text>
+      </g>
+      <g>
+        <rect x="490" y="100" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="590" y="126" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Map 任务 3</text>
+        <text x="590" y="145" text-anchor="middle" font-size="11.5" fill="#185FA5">互不通信，各自算</text>
+      </g>
+
+      <!-- Combiner callout -->
+      <line x1="692" y1="129" x2="712" y2="129" stroke="#7A7A74" stroke-width="1" stroke-dasharray="3 2"/>
+      <rect x="714" y="100" width="142" height="58" rx="8" fill="#FFFFFF" stroke="#185FA5" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="785" y="122" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0C447C">Combiner</text>
+      <text x="785" y="139" text-anchor="middle" font-size="11" fill="#185FA5">（可选）map 端</text>
+      <text x="785" y="155" text-anchor="middle" font-size="11" fill="#185FA5">先局部聚合</text>
+
+      <!-- arrows 2 -> 3 -->
+      <line x1="100" y1="160" x2="100" y2="194" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="345" y1="160" x2="345" y2="194" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="590" y1="160" x2="590" y2="194" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+
+      <!-- Row 3 Shuffle -->
+      <g>
+        <rect x="0" y="196" width="690" height="62" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="345" y="219" text-anchor="middle" font-size="13.5" font-weight="600" fill="#085041">Shuffle → 排序 → 分区（框架负责，代码里看不到）</text>
+        <text x="345" y="239" text-anchor="middle" font-size="11.5" fill="#0F6E56">同一个 key 的所有 value 汇成一组，按 key 排序</text>
+        <text x="345" y="254" text-anchor="middle" font-size="11.5" fill="#0F6E56">按 hash 决定交给哪个 Reduce：分区数 = Reduce 任务数</text>
+      </g>
+
+      <!-- arrows 3 -> 4 -->
+      <line x1="100" y1="260" x2="100" y2="286" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="345" y1="260" x2="345" y2="286" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="590" y1="260" x2="590" y2="286" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+
+      <!-- Row 4 Reduce -->
+      <g>
+        <rect x="0" y="288" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="100" y="314" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Reduce 任务 1</text>
+        <text x="100" y="333" text-anchor="middle" font-size="11.5" fill="#185FA5">同 key 只进一个 Reduce</text>
+      </g>
+      <g>
+        <rect x="245" y="288" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="345" y="314" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Reduce 任务 2</text>
+        <text x="345" y="333" text-anchor="middle" font-size="11.5" fill="#185FA5">拿到的是 key + 值列表</text>
+      </g>
+      <g>
+        <rect x="490" y="288" width="200" height="58" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="590" y="314" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0C447C">Reduce 任务 3</text>
+        <text x="590" y="333" text-anchor="middle" font-size="11.5" fill="#185FA5">输出通常写回文件系统</text>
+      </g>
+
+      <!-- arrows 4 -> 5 -->
+      <line x1="100" y1="348" x2="100" y2="374" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="345" y1="348" x2="345" y2="374" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+      <line x1="590" y1="348" x2="590" y2="374" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw)"/>
+
+      <!-- Row 5 输出 -->
+      <g>
+        <rect x="0" y="376" width="200" height="46" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="100" y="402" text-anchor="middle" font-size="12.5" fill="#085041" font-family="ui-monospace,Consolas,monospace">part-r-00000</text>
+      </g>
+      <g>
+        <rect x="245" y="376" width="200" height="46" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="345" y="402" text-anchor="middle" font-size="12.5" fill="#085041" font-family="ui-monospace,Consolas,monospace">part-r-00001</text>
+      </g>
+      <g>
+        <rect x="490" y="376" width="200" height="46" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="590" y="402" text-anchor="middle" font-size="12.5" fill="#085041" font-family="ui-monospace,Consolas,monospace">part-r-00002</text>
+      </g>
+
+      <!-- 类型链 -->
+      <text x="0" y="452" font-size="12" fill="#4A4A46" font-family="ui-monospace,Consolas,monospace">&lt;k1,v1&gt; — map → &lt;k2,v2&gt; — shuffle → &lt;k2,[v2,v2,…]&gt; — reduce → &lt;k3,v3&gt;</text>
+    </svg>
+    <p class="legend">
+      <span><i class="sw" style="background:#E6F1FB;border:1px solid #185FA5"></i>蓝色 = 作业代码（Map / Reduce 由你实现）</span>
+      <span><i class="sw" style="background:#E1F5EE;border:1px solid #0F6E56"></i>绿色 = 框架负责（分片、Shuffle、排序、分区、容错）</span>
+    </p>
+  </figure>
+
+  <p><strong>图怎么看：</strong>从上往下读。最上面三个绿色块是被切开的数据，每一块起一个 Map 任务——<strong>三个 Map 跑的是同一份代码，只是喂进去的数据不同</strong>，而且它们之间<strong>互不通信</strong>，这正是能随意横向扩展的原因。接着所有 Map 的输出汇进中间那个贯穿全宽的绿色块，也就是 Shuffle：它按 key 排序、把同 key 的 value 归成一组、再按哈希分给不同的 Reduce。下面三个蓝色块是 Reduce，<strong>同一个 key 只会出现在一个 Reduce 里</strong>——这是 Reduce 能够"收拢"的前提。最后每个 Reduce 各写一个小文件，所以有几个 Reduce 就有几个输出文件。最下面那行是类型链，注意 <code>&lt;k2,v2&gt;</code> 变成 <code>&lt;k2,[v2,v2,…]&gt;</code> 的那一刻，就是 Shuffle 干的事。</p>
+
+  <h2>应用场景：统计全站热点词</h2>
+
+  <p><strong>场景：</strong>假设你是某新闻网站的数据工程师，要找出全站 10 亿篇文章里出现次数最多的词，用来生成热点词云。文章总量是 TB 级，单机跑不动。你写两个函数交给集群：<code>map</code> 负责把每篇文章切成词、每个词吐一个 <code>&lt;词, 1&gt;</code>；<code>reduce</code> 负责把同一个词的所有 1 加起来。中间怎么分发、怎么排序，你一行都不用写。</p>
+
+  <figure class="figure">
+    <figcaption>WordCount 流水线（括号内为本地实跑示例的真实数字）</figcaption>
+    <svg viewBox="0 0 860 260" width="100%" role="img" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,'Microsoft YaHei',sans-serif">
+      <title>WordCount 流水线</title>
+      <desc>输入文章切分为分片存于 HDFS；Map 阶段每个词输出一个键值对，示例共 13 个；Combiner 可选地在 map 端局部聚合为 5 个；Shuffle 按词分组；Reduce 求和；输出最终词频结果。</desc>
+      <defs>
+        <marker id="arw2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 z" fill="#7A7A74"/>
+        </marker>
+      </defs>
+
+      <!-- Row A -->
+      <g>
+        <rect x="0" y="24" width="260" height="76" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="130" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">① 输入：全站文章</text>
+        <text x="130" y="68" text-anchor="middle" font-size="11.5" fill="#0F6E56">切成 N 个分片，存在 HDFS 上</text>
+        <text x="130" y="86" text-anchor="middle" font-size="11.5" fill="#0F6E56">示例：3 篇文档，共 13 个单词</text>
+      </g>
+      <g>
+        <rect x="300" y="24" width="260" height="76" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="430" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">② Map：逐词切分</text>
+        <text x="430" y="68" text-anchor="middle" font-size="11.5" fill="#185FA5">每个词 → (词, 1)</text>
+        <text x="430" y="86" text-anchor="middle" font-size="11.5" fill="#185FA5">示例输出 13 个键值对</text>
+      </g>
+      <g>
+        <rect x="600" y="24" width="260" height="76" rx="10" fill="#FFFFFF" stroke="#185FA5" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="730" y="50" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">③ Combiner（可选）</text>
+        <text x="730" y="68" text-anchor="middle" font-size="11.5" fill="#185FA5">map 端先局部求和</text>
+        <text x="730" y="86" text-anchor="middle" font-size="11.5" fill="#185FA5">示例：13 个 → 5 个，少传 8 个</text>
+      </g>
+      <line x1="262" y1="62" x2="296" y2="62" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw2)"/>
+      <line x1="562" y1="62" x2="596" y2="62" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw2)"/>
+      <path d="M730,102 L730,128 L130,128 L130,148" fill="none" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw2)"/>
+
+      <!-- Row B -->
+      <g>
+        <rect x="0" y="152" width="260" height="76" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="130" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">④ Shuffle：按词分组</text>
+        <text x="130" y="196" text-anchor="middle" font-size="11.5" fill="#0F6E56">big[1,1,1]　data[1,1,1]</text>
+        <text x="130" y="214" text-anchor="middle" font-size="11.5" fill="#0F6E56">hadoop[1,1,1,1]　mapreduce[1,1]</text>
+      </g>
+      <g>
+        <rect x="300" y="152" width="260" height="76" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+        <text x="430" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#0C447C">⑤ Reduce：求和</text>
+        <text x="430" y="196" text-anchor="middle" font-size="11.5" fill="#185FA5">一个词交给一个 Reduce</text>
+        <text x="430" y="214" text-anchor="middle" font-size="11.5" fill="#185FA5">示例：5 个词 → 5 次求和</text>
+      </g>
+      <g>
+        <rect x="600" y="152" width="260" height="76" rx="10" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+        <text x="730" y="178" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">⑥ 输出：词频结果</text>
+        <text x="730" y="196" text-anchor="middle" font-size="11.5" fill="#0F6E56">hadoop 4　big 3　data 3</text>
+        <text x="730" y="214" text-anchor="middle" font-size="11.5" fill="#0F6E56">mapreduce 2　spark 1</text>
+      </g>
+      <line x1="262" y1="190" x2="296" y2="190" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw2)"/>
+      <line x1="562" y1="190" x2="596" y2="190" stroke="#7A7A74" stroke-width="1.5" marker-end="url(#arw2)"/>
+    </svg>
+    <p class="legend">
+      <span><i class="sw" style="background:#E6F1FB;border:1px solid #185FA5"></i>作业代码</span>
+      <span><i class="sw" style="background:#E1F5EE;border:1px solid #0F6E56"></i>框架负责</span>
+      <span><i class="sw" style="background:#FFFFFF;border:1px dashed #185FA5"></i>可选组件</span>
+    </p>
+  </figure>
+
+  <p><strong>图怎么看：</strong>按 ① → ⑥ 的顺序走一遍。关键是第 ④ 步——它把"散在各台机器上的 <code>hadoop</code>"收拢成了一个列表 <code>[1,1,1,1]</code>，第 ⑤ 步才能求和。虚线框的 Combiner 是可选的：本例加了它之后，要跨网络传的键值对从 <strong>13 个降到 5 个</strong>，而最终 reduce 的结果完全一样（这一点后面有实跑验证）。</p>
+
+  <h3>用 Hadoop Streaming 亲手写一遍</h3>
+  <p>Hadoop 支持用任意可执行程序当 Mapper / Reducer（<strong>Hadoop Streaming</strong>）：从标准输入读一行，往标准输出写 <code>key\tvalue</code>。下面两个 Python 脚本就是符合该接口的最小实现——注意 reducer 能这么写，<strong>前提正是框架已经保证输入按 key 排好序并分好组</strong>。</p>
+
+<pre><code># mapper.py：从 stdin 读，往 stdout 写 "key\tvalue"
+import sys
+for line in sys.stdin:
+    for word in line.strip().split():
+        print("%s\t%d" % (word, 1))
+
+# reducer.py：输入已按 key 排序并分组
+import sys
+current, total = None, 0
+for line in sys.stdin:
+    word, count = line.rstrip("\n").split("\t")
+    count = int(count)
+    if word == current:
+        total += count
+    else:
+        if current is not None:
+            print("%s\t%d" % (current, total))
+        current, total = word, count
+if current is not None:
+    print("%s\t%d" % (current, total))</code></pre>
+
+  <p>本地用管道模拟一遍（<code>sort</code> 就是在模拟 Hadoop 的 shuffle + 排序）：</p>
+
+<pre><code>$ cat mr_input.txt
+hadoop mapreduce hadoop big data
+mapreduce spark hadoop
+big data big data hadoop
+
+$ cat mr_input.txt | python mapper.py
+hadoop	1
+mapreduce	1
+hadoop	1
+big	1
+data	1
+mapreduce	1
+spark	1
+hadoop	1
+big	1
+data	1
+big	1
+data	1
+hadoop	1
+
+$ cat mr_input.txt | python mapper.py | sort | python reducer.py
+big	3
+data	3
+hadoop	4
+mapreduce	2
+spark	1</code></pre>
+
+  <div class="tip"><strong>把 <code>sort</code> 去掉会怎样？</strong>reducer 会把同一个词的多次出现误判成多个不同分组，输出变成 <code>hadoop 1</code>、<code>hadoop 1</code>、<code>hadoop 1</code>、<code>hadoop 1</code> 这样拆开的结果。这个实验能最直观地说明：<strong>Shuffle 的排序不是"顺便做的优化"，而是 Reduce 正确性的前提</strong>。</div>
+
+  <h2>五组易混辨析</h2>
+
+  <div class="card">
+    <div class="sec-t">① MapReduce 和 Hadoop 不是一回事</div>
+    <p><strong>MapReduce 是编程模型</strong>（一种"先 map 再 reduce"的计算思想，出自 Google 2004 年论文）；<strong>Hadoop 是这个模型的开源实现</strong>，而且 Hadoop 现在指的是一整套生态（HDFS + YARN + MapReduce 等）。类比：MapReduce 是"菜谱"，Hadoop 是"按这个菜谱做出来的那道菜外加整间厨房"。说"我用 MapReduce 存数据"是错的——存数据是 <a href="./hdfs.html">HDFS</a> 的活儿。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">② Shuffle 不是"打乱"，恰恰相反</div>
+    <p>这个词最容易望文生义。Shuffle 在扑克牌里是"洗牌"，但在 MapReduce 里它的效果是<strong>把同类key聚拢</strong>——框架抓取各 Mapper 的输出、按 key 排序、把相同 key 的 value 汇成一组。它"打乱"的只是数据的<strong>物理位置</strong>（从各台机器搬过来），逻辑上反而变得整齐了。记住：shuffle 与 sort 是<strong>同时</strong>发生的，边抓取边归并。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">③ Combiner 不是想加就能加</div>
+    <p>它要求聚合运算满足<strong>交换律与结合律</strong>。求和、计数、求最大 / 最小值可以；<strong>求平均值、求中位数不行</strong>。本地实跑的数字（数据 <code>[2,4]</code> 与 <code>[6]</code>）：</p>
+<pre><code>正确做法（传「和 + 个数」到 reduce 再除）：总平均 = 4.0
+错误做法（map 端各自求平均再平均）：3.0 与 6.0 → 4.5
+两者相等吗： False</code></pre>
+    <p class="pass">真要算平均值，正确写法是 map 输出 <code>&lt;key, (和, 个数)&gt;</code>，在 reduce 端先分别求和、最后再做一次除法。另外框架<strong>不保证 Combiner 一定被调用</strong>，所以正确性永远不能依赖它。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">④ Reduce 的输出不是全局有序的</div>
+    <p>官方明确写了：<strong>Reducer 的输出是不排序的</strong>。Shuffle 阶段排序的是 <em>reduce 的输入</em>，不是输出。所以你会得到若干个 <code>part-r-000xx</code> 文件，<strong>每个文件内部按 key 有序，但跨文件之间没有顺序保证</strong>。想要全局有序的结果，要么只设 1 个 Reduce（牺牲并行度），要么额外做一次全排序作业。</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-t">⑤ MapReduce 并没有"被淘汰"，但它确实有边界</div>
+    <p>它仍然适合<strong>一次扫描就能算完的批处理</strong>：ETL 清洗、日志统计、倒排索引。它不擅长的是<strong>需要反复迭代同一份数据</strong>的场景——每一轮迭代都要重新读盘、重新 shuffle，代价极高。这正是后来 Spark 出现的动机（把中间结果放在内存里复用）。本系列的下一份资料会讲 Spark，到时候可以直接对比两者的迭代成本。</p>
+  </div>
+
+  <h2>动手练习</h2>
+  <p>先自己写，再展开对答案。</p>
+
+  <details>
+    <summary>练习 1：写出 WordCount 作业中 map 和 reduce 各自的输入 / 输出类型</summary>
+<pre><code>map:     &lt;k1=行的起始偏移量, v1=该行文本&gt;  →  &lt;k2=单词, v2=1&gt;
+reduce:  &lt;k2=单词, [1, 1, 1, ...]&gt;        →  &lt;k3=单词, v3=总次数&gt;</code></pre>
+    <p>要点：输入键是什么取决于 <code>InputFormat</code>——用默认的 <code>TextInputFormat</code> 时，key 是这一行在文件中的字节偏移量，value 是这一行的文本；但 WordCount 根本不关心这个输入 key，真正起作用的是 map 自己产出的 <code>&lt;单词, 1&gt;</code>。回到正文：见「一切都是键值对」与「Shuffle」。</p>
+  </details>
+
+  <details>
+    <summary>练习 2：输入是 <code>["a b a", "b c"]</code>，写出 map 输出条数、shuffle 后的分组、reduce 的最终结果</summary>
+<pre><code>map 输出：[('a', 1), ('b', 1), ('a', 1), ('b', 1), ('c', 1)]   条数 = 5
+shuffle 分组：{'a': [1, 1], 'b': [1, 1], 'c': [1]}
+reduce 结果：[('a', 2), ('b', 2), ('c', 1)]</code></pre>
+    <p>要点：map 输出的条数等于<strong>单词出现的总次数</strong>（5），不是不同单词的个数（3）——这是初学者最容易答错的地方。shuffle 之后才是 3 组。回到正文：见「Shuffle：MapReduce 的心脏」。</p>
+  </details>
+
+  <details>
+    <summary>练习 3：给 WordCount 加上 Combiner 之后，跨网络要传的键值对从 13 个降到 5 个，为什么最终结果完全不变？</summary>
+<pre><code>不加 combiner 要传：13 个键值对
+加 combiner  要传：5 个键值对
+reduce 结果是否一致： True</code></pre>
+    <p>要点：因为<strong>加法满足结合律</strong>——先把 <code>(1+1)</code> 合成 2 再与别人的 2 相加，和直接把四个 1 相加，结果相同。所以 Combiner 只是"提前做了一部分求和"，不改变语义。反例见辨析 ③：平均值不满足这个性质，加了 Combiner 就会算错。回到正文：见「Combiner：可选的加速器」。</p>
+  </details>
+
+  <details>
+    <summary>练习 4：判断正误——「Reduce 的输出是按 key 全局有序的」，并说明理由</summary>
+    <p><strong>错误。</strong>官方明确说明 Reducer 的输出<strong>不排序</strong>。被排序的是 reduce 的输入（由 Shuffle 阶段完成）。结果被写成若干个 <code>part-r-000xx</code> 文件，每个 Reducer 一个：<strong>单个文件内按 key 有序，文件之间没有顺序保证</strong>。要全局有序，要么把 reduce 任务数设成 1（但那样就没有并行度了），要么再跑一次专门的排序作业。回到正文：见辨析 ④。</p>
+  </details>
+
+  <h2>自检清单</h2>
+  <ol class="check">
+    <li>能说出 MapReduce 的定义，并区分「MapReduce（编程模型）」与「Hadoop（开源实现）」</li>
+    <li>能说出整条类型链：<code>&lt;k1,v1&gt; → &lt;k2,v2&gt; → &lt;k2,[v2…]&gt; → &lt;k3,v3&gt;</code>，并指出哪一步是 Shuffle 造成的</li>
+    <li>能解释「一个 InputSplit 对应一个 Map 任务」，以及为什么分片大小以 HDFS 块大小为上限</li>
+    <li>能说明 Shuffle 做了哪三件事（抓取 / 排序分组 / 分区），以及为什么它是最贵的一步</li>
+    <li>能判断某次聚合能否加 Combiner，并说清平均值为什么不行</li>
+    <li>能说清「同一个 key 只会进入一个 Reduce」这条保证是由什么组件实现的（Partitioner，默认 HashPartitioner）</li>
+    <li>能判断 Reduce 的输出是否全局有序，并给出要全局有序时的两种做法</li>
+    <li>能举出 MapReduce 适合与不适合的任务各一个，并说明不适合的原因</li>
+  </ol>
+
+  <hr>
+
+  <h2>可核查来源</h2>
+  <p>以下均为 Apache Hadoop 官方文档（hadoop.apache.org），链接已逐条 curl 验证返回 200，访问日期 2026-10-18。</p>
+  <table>
+    <thead><tr><th style="width:30%">来源</th><th style="width:46%">链接</th><th>支撑内容</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Apache Hadoop 3.3.5 · MapReduce Tutorial</td>
+        <td><a href="https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html">hadoop.apache.org/docs/stable/.../MapReduceTutorial.html</a></td>
+        <td>键值对模型、类型链、InputSplit、Reducer 三阶段、Partitioner、Combiner、Reduce 数量建议、数据本地性</td>
+      </tr>
+      <tr>
+        <td>Apache Hadoop · Mapper API</td>
+        <td><a href="https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapreduce/Mapper.html">hadoop.apache.org/docs/stable/api/.../Mapper.html</a></td>
+        <td>Mapper 的职责与「每个 InputSplit 启动一个 map task」</td>
+      </tr>
+      <tr>
+        <td>Apache Hadoop · Reducer API</td>
+        <td><a href="https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapreduce/Reducer.html">hadoop.apache.org/docs/stable/api/.../Reducer.html</a></td>
+        <td>Reducer 的 shuffle / sort / reduce 三阶段与「输出不排序」</td>
+      </tr>
+      <tr>
+        <td>Apache Hadoop · Hadoop Streaming</td>
+        <td><a href="https://hadoop.apache.org/docs/stable/hadoop-streaming/HadoopStreaming.html">hadoop.apache.org/docs/stable/hadoop-streaming/HadoopStreaming.html</a></td>
+        <td>用任意可执行程序（stdin / stdout）实现 Mapper 与 Reducer</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <strong>一条如实说明：</strong>MapReduce 的原始论文是 Dean &amp; Ghemawat 发表于 OSDI'04 的《MapReduce: Simplified Data Processing on Large Clusters》。本次生成时本机网络<strong>无法访问 research.google 与 usenix.org（curl 返回 000）</strong>，论文链接无法验证可达性，因此<strong>没有列入上表</strong>——宁可少一条，也不放未经校验的链接。论文出处可在能正常访问的网络环境下自行补查。
+  </div>
+
+  <div class="tip">
+    <strong>本资料中所有代码与输出均在本地 Python 3.13.12 实际运行验证过</strong>，包括：词频统计模拟（13 个键值对 → 5 个单词）、Combiner 前后对比（13 → 5，结果一致 True）、平均值反例（4.0 vs 4.5），以及 Hadoop Streaming 风格的 mapper / reducer 管道实跑。
+  </div>
+
+  <p class="foot">
+    大数据四件套 ② · 前接 <a href="./hdfs.html">hdfs.html</a>（存储层：HDFS 负责把文件切成块存好，MapReduce 负责在数据所在节点上就地计算）·
+    本系列计划：HDFS → <strong>MapReduce</strong> → Spark → NoSQL ·
+    学习资料由 AI 起草，<strong>请务必人工核查后再作为笔记定稿</strong>（核对事实、改写解释、补充自己的理解），核查记录建议写进 README。
+  </p>
+
+</div>
+</body>
+</html>

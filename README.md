@@ -11,6 +11,7 @@ bigdata-homework/
 │   └── 01.ipynb           # 同内容的 notebook，含已执行输出
 ├── learning-materials/
 │   ├── hdfs.html             # 概念学习资料：HDFS（大数据四件套之一）
+│   ├── mapreduce.html        # 概念学习资料：MapReduce（大数据四件套之二，含 Streaming 实跑）
 │   ├── python-运算符.html     # Python 语法地基：七类运算符
 │   ├── python-变量类型.html   # Python 语法地基：八种常用类型 + 可变/不可变
 │   └── python-流程控制.html   # Python 语法地基：分支 / 循环 / 跳转
@@ -43,7 +44,7 @@ bigdata-homework/
 
 > 用 concept-learner 学习「MapReduce」 / 生成「Spark」的概念学习资料
 
-已生成：`learning-materials/hdfs.html`（HDFS）。计划中的四件套：**HDFS → MapReduce → Spark → NoSQL**，最后用目录页 `index.html` 串起概念之间的联系。
+已生成：`learning-materials/hdfs.html`（HDFS）、`learning-materials/mapreduce.html`（MapReduce）。计划中的四件套：**HDFS → MapReduce → Spark → NoSQL**，最后用目录页 `index.html` 串起概念之间的联系。
 
 ## 开发环境
 
@@ -64,6 +65,7 @@ bigdata-homework/
 | `learning-materials/python-运算符.html` | 起草正文、优先级表与易混辨析 | 待本人复核（第 1 次课配套） |
 | `learning-materials/python-变量类型.html` | 起草正文、类型地图与练习 | **所有代码示例在本地 Python 3.13 实跑，输出逐条核对**；**4 条 python.org 来源 curl 验证 200**（访问日期 2026-10-10）；正文待本人复核 |
 | `learning-materials/python-流程控制.html` | 起草正文、执行路线图与练习答案 | **13 组代码示例 + 5 道练习答案在本地 Python 3.13.14 实跑**，输出取自真实运行结果；**5 条 python.org 来源 curl 验证 200**（访问日期 2026-10-15）；正文待本人复核 |
+| `learning-materials/mapreduce.html` | 起草正文、两张数据流图与练习答案 | **4 条 hadoop.apache.org 官方来源 curl 验证 200**（访问日期 2026-10-18）；**全部代码在本地 Python 3.13.12 实跑**，输出取自真实运行结果（词频统计 13→5 个键值对、Combiner 前后一致 True、平均值反例 4.0 vs 4.5、Streaming mapper/reducer 管道）；HTML 标签闭合与 2 张内联 SVG 的 XML 合法性已用解析器自检通过；**正文待本人复核**（原始论文链接因本机无法访问 research.google / usenix.org 未列入来源表） |
 | `scripts/01.py` | **本人手写** | 第一行代码，非 AI 代写 |
 
 Skill 的定位是「把可复用的方法固化下来」，不是替人完成作业——概念资料仍需本人在理解后修订。
