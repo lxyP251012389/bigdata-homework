@@ -131,6 +131,7 @@ Skill 的定位是「把可复用的方法固化下来」，不是替人完成�
 
 ## 提交记录
 
+- `62f0d8b` feat: 类别变量清理、编码与父母职业关联分析
 - `ffa0ad2` feat: submit homework 01 py and ipynb
 - `d87caed` chore: add project-level skills (git-push-flow, concept-learner)
 - `72dbfa5` docs: add README, python learning roadmap and hdfs concept material
